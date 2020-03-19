@@ -1,0 +1,2 @@
+# Diary
+Journal/diary
