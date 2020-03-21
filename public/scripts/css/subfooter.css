@@ -1,0 +1,19 @@
+*{
+    box-sizing: border-box;
+}
+
+li{
+    list-style: none;
+}
+
+
+ .lastC{
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     background: #00ffaa;
+     height: 400px;
+     text-align: center;
+     overflow: hidden;
+}

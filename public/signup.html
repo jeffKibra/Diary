@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-156554032-1"></script>
+<script>
+ window.dataLayer = window.dataLayer || [];
+ function gtag(){dataLayer.push(arguments);}
+ gtag('js', new Date());
+
+ gtag('config', 'UA-156554032-1');
+</script>
+
+   <title>Online Diary/journal</title>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+   <meta http-equiv="refresh" />
+   
+   <meta name="description" content="The number one free journal and diary with 100% privacy and is available offline." />
+   
+   <meta name="keywords" content="online diary, online journal, free diary with total privacy, online bible study tool, group bible study" />
+   
+   <meta name="author" content="Geoffrey Kibera Ngure" />
+   
+   <script data-ad-client="ca-pub-6607329542714309" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+   <!--bootstrap-->
+   <link rel="stylesheet" type="text/css" href="./boot/bootstrap.min.css" />
+   <link rel="stylesheet" type="text/css" href="./boot/bootstrap-grid.min.css" />
+   <link rel="stylesheet" type="text/css" href="./boot/bootstrap-reboot.min.css" />
+
+   <!--normal css-->
+    <link rel="stylesheet" type="text/css" href="./css/footer.css" />
+    <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <link rel="stylesheet" type="text/css" href="./css/actions.css" />
+
+   <!--favicon-->
+   <link rel="apple-touch-icon" sizes="57x57" href="./favicon/apple-icon-57x57.png" />
+   <link rel="apple-touch-icon" sizes="60x60" href="./favicon/apple-icon-60x60.png" />
+   <link rel="apple-touch-icon" sizes="72x72" href="./favicon/apple-icon-72x72.png" />
+   <link rel="apple-touch-icon" sizes="76x76" href="./favicon/apple-icon-76x76.png" />
+   <link rel="apple-touch-icon" sizes="114x114" href="./favicon/apple-icon-114x114.png" />
+   <link rel="apple-touch-icon" sizes="120x120" href="./favicon/apple-icon-120x120.png" />
+   <link rel="apple-touch-icon" sizes="144x144" href="./favicon/apple-icon-144x144.png" />
+   <link rel="apple-touch-icon" sizes="152x152" href="./favicon/apple-icon-152x152.png" />
+   <link rel="apple-touch-icon" sizes="180x180" href="./favicon/apple-icon-180x180.png" />
+   <link rel="icon" type="image/png" sizes="192x192" href="./favicon/android-icon-192x192.png" />
+   <link rel="icon" type="image/png" sizes="32x32" href="./favicon/favicon-32x32.png" />
+   <link rel="icon" type="image/png" sizes="96x96" href="./favicon/favicon-96x96.png" />
+   <link rel="icon" type="image/png" sizes="16x16" href="./favicon/favicon-16x16.png" />
+
+   <meta name="msapplication-TileColor" content="#00ffaa" />
+   <meta name="msapplication-TileImage" content="./favicon/ms-icon-144x144.png" />
+   <meta name="theme-color" content="#ccffee" />
+
+   <link rel="manifest" href="manifest.json" />
+
+   <script type="text/javascript" src="./scripts/widgEditor.js"></script>
+
+   <!--fonts-->
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bangers|Roboto+Mono|Indie+Flower&display=swap">
+   
+</head>
+
+<body>    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                
+                <br />
+                <h5>Please enter your details to have an account...</h5>
+                <hr />
+    
+	           <form action="./server/diaryserver.php" method="post" role="form" onSubmit="return validateForm(this)" >
+                    <div class="form-group">
+                        <input type="text" name="firstname" class="form-control col-sm-5 mx-auto" placeholder="First name" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="surname" class="form-control col-sm-5 mx-auto" placeholder="Surname" />
+                    </div>
+                    <div class="form-group">
+                        <p id="userup" class="" ></p>
+                        <input type="text" id="username" name="username" class="form-control col-sm-5 mx-auto" placeholder="username" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="email" class="form-control col-sm-5 mx-auto" placeholder="Email" />
+                    </div>
+                    <div class="form-group">
+                        <input id="password" type="password" name="password" class="form-control col-sm-5 mx-auto" placeholder="Password" />
+                    </div>
+                    <div class="form-group">
+                        <input id="cpassword" type="password" name="cpassword" class="form-control col-sm-5 mx-auto" placeholder="Confirm password" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="submit" name="signup" value="SIGNUP" class="btn btn-confirm btn-block col-sm-5 mx-auto" />
+                    </div>
+                </form> 
+                
+                <br />
+                <div class="container">
+                    <div class="row flexible">
+                        <div class="col-sm-4"></div>
+                        
+                        <div class="col-sm-4">
+                            <p>Have an account? <a href="login">Log in...</a></p>
+                        </div>
+                        
+                        <div class="col-sm-4"></div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+     
+	<div id="footer" style="position:fixed; bottom:0;">
+        <small>
+            copyright &copy; 2020 | 
+            <a href="http://finitecreations.co.ke"> powered by finite creations</a>
+        </small>
+    </div>
+
+	<script type="text/javascript" src="./scripts/validator.js"></script>
+    <script type="text/javascript" src="./scripts/indexedDB.js" ></script>
+    <script type="text/javascript" src="./scripts/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#username").blur(function(){
+                var uservalue=$(this).val();
+        
+                $.post("diaryserver.php", {myusername:uservalue}, function(data){
+                    
+                    if(data=="yes"){
+                        if($("#userup").hasClass("userno")){
+                            $("#userup").removeClass("userno");
+                        }
+                        $("#userup").addClass("useryes");
+                        data="username available";
+                    }else if(data=="no"){
+                        if($("#userup").hasClass("useryes")){
+                            $("#userup").removeClass("useryes");
+                        }
+                        $("#userup").addClass("userno");
+                        data="username already taken. Please select another username";
+                    }else{
+                        
+                    }
+                    $("#userup").html(data);
+                });
+            }); 
+        });
+
+        function validateForm(){
+        var day=new Date();
+        var date=day.toDateString();
+        var time=day.toTimeString();
+        $("#timer").val(time);
+        $("#dated").val(date);
+
+        var payee={
+            date:$("#dated").val(),
+            time:$("#timer").val(),
+            title:$("#mtitle").val(),
+            message:$("#noise").val()            
+        }
+        
+        var fail="";
+        fail = validateTitle(payee.title);
+        fail += validateMessage(payee.message);
+        //fail += validateSurname(form.subject.value);
+
+        if(fail==""){
+            fetch("diaryhandler.php", {
+							method:'POST',
+							headers:new Headers({'content-type':'application/json'}),
+							body:JSON.stringify(payee)
+						}).then(response=>{
+                            displayMessage("message sent...");
+                            return response.text();
+						}).then(response=>{
+                            displayMessage(response);
+                        }).catch(err=>{
+							dbWriter("fcrDiary", payee);
+							console.log(err);
+							displayMessage("message queued...");
+						});
+                   		
+        }else{
+            alert(fail); 
+            
+        }
+        return false;
+    }
+
+    function displayMessage(msg){
+        alert(msg);
+    }
+
+    if(navigator.online){
+	 	console.log("you are online");
+	}else{
+	 	console.log("you are offline");
+	}
+    </script>
+	
+</body>
+</html>
+
+
+    
+    
+    
+    
+    

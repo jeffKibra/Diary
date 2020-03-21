@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+     <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-156554032-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-156554032-1');
+</script>
+
+	<title>Online Diary/journal</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="refresh" />
+    
+	<meta name="description" content="The number one free journal and diary with 100% privacy and is available offline." />
+    
+	<meta name="keywords" content="online diary, online journal, free diary with total privacy, online bible study tool, group bible study" />
+    
+	<meta name="author" content="Geoffrey Kibera Ngure" />
+    
+    <script data-ad-client="ca-pub-6607329542714309" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <!--bootstrap-->
+	<link rel="stylesheet" type="text/css" href="./boot/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="./boot/bootstrap-grid.min.css" />
+	<link rel="stylesheet" type="text/css" href="./boot/bootstrap-reboot.min.css" />
+
+	<!--normal css-->
+    <link rel="stylesheet" type="text/css" href="./css/footer.css" />
+    <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <link rel="stylesheet" type="text/css" href="./css/actions.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widgEditor.css">
+
+    <!--favicon-->
+    <link rel="apple-touch-icon" sizes="57x57" href="./favicon/apple-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="./favicon/apple-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="./favicon/apple-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="./favicon/apple-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="./favicon/apple-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="./favicon/apple-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="./favicon/apple-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="./favicon/apple-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicon/apple-icon-180x180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./favicon/android-icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="./favicon/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon/favicon-16x16.png" />
+
+    <meta name="msapplication-TileColor" content="#00ffaa" />
+    <meta name="msapplication-TileImage" content="./favicon/ms-icon-144x144.png" />
+    <meta name="theme-color" content="#ccffee" />
+
+    <link rel="manifest" href="manifest.json" />
+
+    <script type="text/javascript" src="./scripts/widgEditor.js"></script>
+
+    <!--fonts-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bangers|Roboto+Mono|Indie+Flower&display=swap">
+    
+</head>
+
+<body>
+   
+    <div style="margin-top:50px;"></div>
+
+    <div id="anotherB" class="flexible">
+        <div id="main-btns" >
+				<div class="bar11"></div>
+				<div class="bar12"></div>
+				<div class="bar13"></div>
+        </div>
+        <div id="silo1">
+            <button class="linkers1 write">Write</button> 
+            <button class="linkers1 reader">Read</button>
+            <button class="linkers1 offlinereader">Read Unsaved</button>
+            <a href="" ><button class="linkers1">Logout</button></a> 
+            <a href="../" ><button class="linkers1">Visit Homepage</button></a> 
+
+        </div>
+        <div class="flexible">
+            <p class="dated"></p>
+            <!--<p class="timed"></p>-->
+        </div>
+    </div>
+
+    <div id="logoutarea" class="row">
+        <div class="col-sm-2 flexible">
+            <!--write name of the user-->
+        </div>
+        <div class="col-sm-1 flexible">
+            <button id="write" class="write btn btn-primary btn-block">Write..</button>
+        </div>
+        <div class="col-sm-2" >
+        </div>
+        <div class="col-sm-1 flexible">
+            <button id="reader" class="reader btn btn-primary btn-block">Read..</button>
+        </div>
+        <div class="col-sm-2 flexible">
+            <button id="" class="offlinereader btn btn-primary btn-block">Read offline</button>
+        </div>
+        <div class="col-sm-2 flexible">
+            <p class="dated"></p>
+            <p class="timed"></p>
+        </div>
+        <div class="col-sm-2 flexible">
+            <a href="logout"><button class="btn btn-danger btn-block">logout!</button></a>
+        </div>
+    </div>
+
+    <div id="identifier" style="padding-top:10px;">
+        <!--write name of the user-->
+    </div>
+    
+    <div id="diary" style="margin-top:20px; padding-top:20px;">
+        <form action="diaryserver.php" onSubmit="return validateForm(this)" method="post" role="form">
+            <label>Please write a subject before saving...</label>
+                <input id="timer" type="hidden" name="timer" value=""; />
+                <input id="dated" type="hidden" name="dated" value=""; />
+            <div class="flexible form-group">
+                <input id="mtitle" class="form-control col-sm-4 mx-auto" type="text" name="title" placeholder="subject" />
+            </div>
+            <div class="form-group">
+                <textarea id="noise" name="secret" class="widgEditor form-control mx-auto" placeholder="This is your writing area..."></textarea>
+            </div>
+		  
+			<div class="form-group">
+                <input type="submit" id="submitW" name="submitW" value="SAVE!" class="btn btn-primary btn-block col-sm-3 mx-auto" />
+            </div>
+		</form>  
+    </div>
+
+    <div class="container">
+        <div class="row">
+                <div class="col-sm-3"></div>
+                <div id="writtenC" class="col-sm-6 flexible hidden" ></div>
+                <div class="col-sm-3"></div>
+        </div>
+    </div>
+    
+    <div id="read" class="flexible hidden offsetted">
+        <div class="table-responsive">
+			<table class="table table-condensed">
+				<thead>
+    			    <tr>
+    				    <th>DATE</th>
+    				    <th>Time</th>
+                        <th>Subject</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+    		    <tbody id="tableBodyOn">
+
+                </tbody>
+        
+            </table>
+        </div>
+    </div>
+
+    <div id="offlineread" class="flexible hidden offsetted">
+        <button id="view" class="btn btn-primary">view</button>
+        <div class="table-responsive">
+			<table class="table table-condensed">
+				<thead>
+    			    <tr>
+    				    <th>DATE</th>
+    				    <th>Time</th>
+                        <th>Subject</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+    		    <tbody id="tableBodyOff">
+
+                </tbody>
+        
+            </table>
+        </div>
+    </div>
+    
+    <div style="margin-top:100px;"></div>
+
+    <div id="footer" style="position:fixed; bottom:0;">
+        <small>
+            copyright &copy; 2020 | 
+            <a href="http://finitecreations.co.ke"> powered by finite creations</a>
+        </small>
+    </div>
+
+	
+
+	<script type="text/javascript" src="./scripts/jquery.min.js"></script>    
+    <script type="text/javascript" src="./scripts/validator.js"></script>
+    <script type="text/javascript" src="./scripts/indexedDB.js"></script>
+    
+	<script type="text/javascript">
+        $(document).ready(function(){
+            $("#view").click(function(event){
+                var test=$(".readoff");
+                console.log(test);
+                console.log(event);
+                console.log($("#tableBodyOff"));
+
+            });
+
+            $(".reader").click(function(){
+                if($("#read").hasClass("hidden")){
+                    $("#read").removeClass("hidden");
+                    $("#writtenC").removeClass("hidden");
+                }
+                if(!$("#diary").hasClass("hidden")){
+                    $("#diary").addClass("hidden");
+                }
+                if(!$("#offlineread").hasClass("hidden")){
+                    $("#offlineread").addClass("hidden");
+                }
+                
+                /*$.post("diaryserver.php", {read:"yes"}, function(data){
+                    $("#read").html(data);
+                })  */  
+            });
+
+            $(".offlinereader").click(function(event){
+                console.log(event);
+                var dataread=allReader("fcrDiary");
+                console.log(dataread);
+                if(!$("#read").hasClass("hidden")){
+                    $("#read").addClass("hidden");
+                }
+                if(!$("#diary").hasClass("hidden")){
+                    $("#diary").addClass("hidden");
+                }
+                if($("#offlineread").hasClass("hidden")){
+                    $("#offlineread").removeClass("hidden");
+                    $("#writtenC").removeClass("hidden");
+                }
+                
+               /* $.post("diaryserver.php", {read:"yes"}, function(data){
+                    $("#read").html(data);
+                })  */ 
+            });
+
+            
+           
+
+            $(".write").click(function(){
+                if(!$("#read").hasClass("hidden")){
+                    $("#read").addClass("hidden");
+                }
+                if($("#diary").hasClass("hidden")){
+                    $("#diary").removeClass("hidden");
+                    $("#writtenC").addClass("hidden");
+                }
+                if(!$("#offlineread").hasClass("hidden")){
+                    $("#offlineread").addClass("hidden");
+                }
+                    
+            }); 
+
+            $("#main-btns").click(function(){
+                    var toip=$("#silo1").css('display');
+                    if(toip=="none"){
+                        reveal();
+                    }else if(toip=="block"){
+                        hider();
+                    }
+            });
+
+            $(".linkers1").click(function(event){
+                var toip=$("#silo1").css('display');
+                if(toip=="block"){
+                    setTimeout(hider, 1000);
+                }
+            });
+
+           /* $("div").doubleclick(function(event){
+                var toip=$("#silo1").css('display');
+                if(toip=="block"){
+                    setTimeout(hider, 1000);   
+                }
+            });*/
+         });
+
+        function offreader(event){
+            console.log(event);
+            
+        }
+         var day=new Date();
+            var date=day.toDateString();
+            var time=day.toTimeString();
+            console.log(date);
+            console.log(time);
+            $(".timed").html(time);
+            $(".dated").html(date);
+        
+        function reveal(){
+            $("#silo1").css('width', '65%');
+            $("#silo1").css('display', 'block');
+        }
+
+        function hider(){
+            $("#silo1").css('width', '0');
+            $("#silo1").css('display', 'none');
+
+         }
+         
+            
+    function validateForm(){
+        var day=new Date();
+        var date=day.toDateString();
+        var time=day.toTimeString();
+        $("#timer").val(time);
+        $("#dated").val(date);
+
+        var payee={
+            date:$("#dated").val(),
+            time:$("#timer").val(),
+            title:$("#mtitle").val(),
+            message:$("#noise").val()            
+        }
+        
+        var fail="";
+        fail = validateTitle(payee.title);
+        fail += validateMessage(payee.message);
+        //fail += validateSurname(form.subject.value);
+
+        if(fail==""){
+            fetch("diaryhandler.php", {
+							method:'POST',
+							headers:new Headers({'content-type':'application/json'}),
+							body:JSON.stringify(payee)
+						}).then(response=>{
+                            displayMessage("message sent...");
+                            return response.text();
+						}).then(response=>{
+                            displayMessage(response);
+                        }).catch(err=>{
+							dbWriter("fcrDiary", payee);
+							console.log(err);
+							displayMessage("message queued...");
+						});
+                   		
+        }else{
+            alert(fail); 
+            
+        }
+        return false;
+    }
+
+    function displayMessage(msg){
+        alert(msg);
+    }
+
+    if(navigator.online){
+	 	console.log("you are online");
+	}else{
+	 	console.log("you are offline");
+	}
+
+            
+            
+
+    
+
+         /* 
+            $(':submit').click(function(){
+                   var data1=$(this).attr("name");
+                 console.log(data1);
+                    var mtitle=$("#mtitle").val();
+                var mysec=$("#noise").val();
+                console.log(mtitle);
+                console.log(mysec);
+                
+                  // $.post("diaryserver.php", {submitW:data, }, function(res){
+                       //$("#writtenC").html(res);
+                   //});
+                  /* var out=$(".title");
+                   for(var i=0;i<out.length;i++){
+                       console.log(out[i]);
+                       console.log(out[i].value);
+                   }
+        
+               });*/
+            
+       
+		
+				
+		
+	</script>
+    
+	
+</body>
+</html>

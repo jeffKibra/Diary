@@ -1,0 +1,30 @@
+
+body{
+    background-color: #ccffee; 
+    font-family: 'Roboto Mono', monospace;
+}
+		img{
+			width: 100%;
+			height: auto;
+			margin: 0 auto;
+		}
+		li{
+			list-style: none;
+		}
+		.centered{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			margin: 0 auto;
+		}
+
+	
+.bborder{
+    border-bottom: .5px solid grey;
+    border-left: .5px solid grey;
+}
+a{
+    cursor: pointer;
+}

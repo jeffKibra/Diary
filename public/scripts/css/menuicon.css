@@ -1,0 +1,74 @@
+/*menu icon start*/	
+
+body{
+    background-color: #ccffee; 
+    font-family: 'Roboto Mono', monospace;
+}
+#main-btn{
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    background: #00ffaa;
+    
+	cursor: pointer;
+	align-self: center;
+    overflow: hidden;
+	
+	z-index: 1;
+    height: 50px;
+    width: 50px;
+}
+#nav-btn{
+    width: 100%;
+    background-color:  #00ffaa;
+}
+.sticky{
+    width: 100%;
+	position: fixed;
+   top: 0;   
+}
+
+
+.bar1, .bar2, .bar3{
+	width: 30px;
+	height: 4px;
+	background-color: black;
+	margin: 2px 0;
+	transition: 0.4s;	
+}
+.change .bar1{
+    background-color: red;
+    transform-origin: 100% 0;
+    -moz-transform:rotate(-30deg);
+    -ms-transform:rotate(-30deg);
+	-webkit-transform:rotate(-30deg);
+	transform:rotate(-30deg);
+}
+/*fade out the second bar*/
+.change .bar2{
+	opacity: 0;
+}
+/*rotate last bar*/
+.change .bar3{
+     background-color: red;
+    transform-origin: 100% 0;
+    -moz-transform:rotate(30deg);
+    -ms-transform:rotate(30deg);
+	-webkit-transform:rotate(30deg);
+	transform:rotate(30deg);
+}
+
+
+
+@media only screen and (max-width: 768px){
+    #main-btn{
+	   display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        background: #00ffaa;
+    }
+}

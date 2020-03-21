@@ -1,0 +1,42 @@
+.myanimation2.hidden, .myanimation3.hidden, .myanimation4.hidden, .myanimation5.hidden, .myanimation6.hidden, .myanimation7.hidden, .myanimation8.hidden, .myanimation9.hidden, .myanimation10.hidden, .myanimation11.hidden, .myanimation12.hidden, .myanimation113.hidden, .myanimation14.hidden, .myanimation15.hidden, .myanimation16.hidden, .myanimation17.hidden{
+    opacity: 0;
+    -webkit-opacity:0;
+    -moz-opacity:0;
+    -ms-opacity:0;
+    
+    transform: translateY(-200px);
+    -webkit-transform: translateY(-200px);
+    -moz-transform: translateY(-200px);
+    -ms-transform: translateY(-200px);
+}
+
+.myanimation2.hidden *, .myanimation3.hidden *, .myanimation4.hidden *, .myanimation5.hidden *, .myanimation6.hidden *, .myanimation7.hidden *, .myanimation8.hidden *, .myanimation9.hidden *, .myanimation10.hidden *, .myanimation11.hidden *, .myanimation12.hidden *, .myanimation13.hidden *, .myanimation14.hidden *, .myanimation15.hidden *, .myanimation16.hidden *, .myanimation17.hidden *{
+    opacity: 0;
+    -webkit-opacity:0;
+    -moz-opacity:0;
+    -ms-opacity:0;
+    
+	transform: translateY(+200px);
+    -webkit-transform: translateY(+200px);
+    -moz-transform: translateY(+200px);
+    -ms-transform: translateY(+200px);
+}
+
+.myanimation2 *, .myanimation3 *, .myanimation4 *, .myanimation5 *, .myanimation6 *, .myanimation7 *, .myanimation8 *, .myanimation9 *, .myanimation10 *, .myanimation11 *, .myanimation12 *, .myanimation13 *, .myanimation14 *, .myanimation15 *, .myanimation16 *, .myanimation17 *{
+    transition: all 2s ease;
+    -webkit-transition: all 2s ease;
+    -moz-transition: all 2s ease;
+    -ms-transition: all 2s ease;
+}
+
+.myanimation2, .myanimation3, .myanimation4, .myanimation5, .myanimation6, .myanimation7, .myanimation8, .myanimation9, .myanimation10, .myanimation11, .myanimation12, .myanimation13, .myanimation14, .myanimation15, .myanimation16, .myanimation17{
+	transition: all 1s ease;
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -ms-transition: all 1s ease;
+    
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -ms-transform-style: preserve-3d;
+}
