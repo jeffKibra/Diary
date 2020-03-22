@@ -8,6 +8,9 @@
     "mysql2": "^2.1.0",
     "workbox-sw": "^5.1.1"
   },
+  "engines": {
+  	"node": "12.7.0"
+  },
   "devDependencies": {
     "nodemon": "^2.0.1"
   },
@@ -20,13 +23,10 @@
     "url": "git+https://github.com/jeffKibra/Diary.git"
   },
   "keywords": [
-    "online",
+    "online diary",
     "diary",
-    "and",
     "journal",
-    "that",
-    "works",
-    "offline"
+    "offline diary and journal"
   ],
   "author": "Geoffrey",
   "license": "MIT",
