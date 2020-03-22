@@ -1,12 +1,12 @@
-function allReader(mydb){
+function allReader(mystore){
 			var db=null, customer=[],
-			request=window.indexedDB.open(mydb, 2);
+			request=window.indexedDB.open("fcrDiary", 2);
 			request.onsuccess=function(event){
 				db=event.target.result;
 
 				//add data
 				
-				var transaction=db.transaction(["diary"]);
+				var transaction=db.transaction([mystore]);
 				transaction.oncomplete=function(){
 					console.log("all done!");
 				}
@@ -14,7 +14,7 @@ function allReader(mydb){
 					console.error("an error has occurred: "+transaction.error);
 				}
 				//get the store
-				var store=transaction.objectStore("diary");
+				var store=transaction.objectStore(mystore);
 				//retrieve data
 				var customers=[];
 				store.openCursor().onsuccess=function(event){
@@ -63,25 +63,20 @@ function allReader(mydb){
 				document.getElementById("tableBodyOff").appendChild(nodeToAdd);
 				btn.onclick=offreader;
 			}
-			var btn1=document.createElement("button");
-				btn1.setAttribute("class", "btn btn-primary readnone");
-				btn.setAttribute("id", "all");
-				btn.innerHTML="test-btn";
-				var btn2=document.getElementById("offlineread");
-				btn2.appendChild(btn);
+			
 		}
 
-		function dbWriter(mydb, payload){
+		function dbWriter(mystore1, mystore2, payload1, payload2){
 			var db=null,
-			request=window.indexedDB.open(mydb, 2);
+			request=window.indexedDB.open("fcrDiary", 2);
 
 			request.onsuccess=function(event){
 				//console.log(event);
 				db=event.target.result;
 
-				console.log(payload);
+				console.log(payload1, payload2);
 				//add data
-				var transaction=db.transaction(["diary"], "readwrite");
+				var transaction=db.transaction([mystore1, mystore2], "readwrite");
 				transaction.oncomplete=function(){
 					console.log("all done!");
 				}
@@ -89,12 +84,17 @@ function allReader(mydb){
 					console.error("an error has occurred when opening the store: "+transaction.error);
 				}
 				//get the store
-				var store=transaction.objectStore("diary");
+				var store1=transaction.objectStore(mystore1);
+				var store2=transaction.objectStore(mystore2);
 				//add data
 		
-				var request1=store.add(payload);
+				var request1=store1.add(payload1);
 				request1.onsuccess=function(event){
-					console.log("data added successfully");
+					console.log("data1 added successfully");
+				}
+				var request2=store2.add(payload2);
+				request2.onsuccess=function(event){
+					console.log("data2 added successfully");
 				}
 			}
 
@@ -103,13 +103,17 @@ function allReader(mydb){
 				//console.log(event);
 				if(event.oldVersion<1){
 					//didnt exist 
-					var store=db.createObjectStore("diary", {keyPath:"title"});
+					var store1=db.createObjectStore(mystore1, {keyPath:"title"});
+					var store2=db.createObjectStore(mystore2, {keyPath:"title"});
 				}
 				//if it exists and version less than 2
 				if(event.oldVersion<2){
-					var store=request.transaction.objectStore("diary");
-					store.createIndex("by_name", "name");
-					store.createIndex("by_email", "email");
+					var store1=request.transaction.objectStore(mystore1);
+					//var store2=request.transaction.objectStore(mystore2);
+					store1.createIndex("by_date", "date");
+					//store1.createIndex("by_email", "email");
+					//store2.createIndex("by_name", "name");
+					//store2.createIndex("by_email", "email");
 				}
 			};
 
@@ -120,15 +124,15 @@ function allReader(mydb){
 
 
 
-			function dbReader(payload){
+			function dbReader(mystore, payload){
 				var db=null,
-		request=window.indexedDB.open("demo_db", 2);
+		request=window.indexedDB.open("fcrDiary", 2);
 		request.onsuccess=function(event){
 			//console.log(event);
 			db=event.target.result;
 
 			//add data
-		var transaction=db.transaction(["things"]);
+		var transaction=db.transaction([mystore]);
 		transaction.oncomplete=function(){
 			console.log("all done!");
 		}
@@ -136,7 +140,7 @@ function allReader(mydb){
 			console.error("an error has occurred: "+transaction.error);
 		}
 		//get the store
-		var store=transaction.objectStore("things");
+		var store=transaction.objectStore(mystore);
 		//add data
 		var request1=store.get(payload);
 		request1.onsuccess=function(event){

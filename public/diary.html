@@ -118,7 +118,7 @@
     <div id="diary" style="margin-top:20px; padding-top:20px;">
         <form action="diaryserver.php" onSubmit="return validateForm(this)" method="post" role="form">
             <label>Please write a subject before saving...</label>
-                <input id="timer" type="hidden" name="timer" value=""; />
+                <!--<input id="timer" type="hidden" name="timer" value=""; />-->
                 <input id="dated" type="hidden" name="dated" value=""; />
             <div class="flexible form-group">
                 <input id="mtitle" class="form-control col-sm-4 mx-auto" type="text" name="title" placeholder="subject" />
@@ -147,7 +147,6 @@
 				<thead>
     			    <tr>
     				    <th>DATE</th>
-    				    <th>Time</th>
                         <th>Subject</th>
                         <th>Action</th>
                     </tr>
@@ -167,7 +166,6 @@
 				<thead>
     			    <tr>
     				    <th>DATE</th>
-    				    <th>Time</th>
                         <th>Subject</th>
                         <th>Action</th>
                     </tr>
@@ -224,7 +222,7 @@
 
             $(".offlinereader").click(function(event){
                 console.log(event);
-                var dataread=allReader("fcrDiary");
+                var dataread=allReader("topics");
                 console.log(dataread);
                 if(!$("#read").hasClass("hidden")){
                     $("#read").addClass("hidden");
@@ -311,14 +309,21 @@
         var day=new Date();
         var date=day.toDateString();
         var time=day.toTimeString();
-        $("#timer").val(time);
-        $("#dated").val(date);
 
+        $("#dated").val(date);
+        
         var payee={
             date:$("#dated").val(),
-            time:$("#timer").val(),
             title:$("#mtitle").val(),
             message:$("#noise").val()            
+        }
+        var payee1={
+            date:$("#dated").val(),
+            title:$("#mtitle").val(),
+        }
+        var mess1={
+            title:$("#mtitle").val(),
+            message:$("#noise").val()  
         }
         
         var fail="";
@@ -327,17 +332,23 @@
         //fail += validateSurname(form.subject.value);
 
         if(fail==""){
-            fetch("diaryhandler.php", {
+                    fetch("http://localhost/public/diary/diaryhandler.php", {
 							method:'POST',
 							headers:new Headers({'content-type':'application/json'}),
 							body:JSON.stringify(payee)
 						}).then(response=>{
-                            displayMessage("message sent...");
+                            if(response.status!==200){
+                                throw "There was an error communicating to the server. Your data has been stored locally.";
+                            }
+                            console.log(response.status);
+                            //displayMessage("message sent...");
                             return response.text();
 						}).then(response=>{
                             displayMessage(response);
                         }).catch(err=>{
-							dbWriter("fcrDiary", payee);
+                            
+                            dbWriter("topics", "message", payee1, mess1);
+                            //dbWriter("message", mess1);
 							console.log(err);
 							displayMessage("message queued...");
 						});
