@@ -2,12 +2,12 @@ const path = require("path");
 const express = require("express");
 const mysql=require("mysql2");
 
-const connection=mysql.createConnection({
+/*const connection=mysql.createConnection({
     host: 'localhost',
     user: 'finitecr_jeffkibra',
     password: 'king.kin@keen',
     database: 'diary'
-});
+});*/
 
 
 const app=express();
@@ -33,12 +33,12 @@ app.get("/signup", (req, res)=>{
     res.sendFile(path.join(__dirname, 'public', 'signup.html'));
 });
 
-app.get("/req", (req, res)=>{
+/*app.get("/req", (req, res)=>{
     connection.query('SELECT * FROM `diaryid` WHERE `username`="jdoe" AND `password`="jdoe"'), function(err, results, fields){
         console.log(results);
         console.log(fields);
     }
-});
+});*/
 
 app.listen(PORT, ()=>{
     console.log(`app started and listening on port ${PORT}`);
