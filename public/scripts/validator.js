@@ -6,13 +6,13 @@ function validateFirstname(field) {
 	return "";
 }
 
-function validateTitle(field){
-	if(field=="") return "please add a title";
+function validateSubject(field){
+	if(field=="") return "please add a subject.\n";
 	return "";
 }
 
 function validateSurname(field) {
-	if (field == "") return "No Subject was entered.\n";
+	if (field == "") return "No Surname was entered.\n";
 	return "";
 }
 
@@ -24,7 +24,7 @@ function validateEmail(field) {
 }
 
 function validateMessage(field) {
-	if (field == "") return "No Message was entered.\n";
+	if (field == "") return "No entrie was writen.\n";
 	
 	return "";
 }

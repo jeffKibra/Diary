@@ -65,7 +65,8 @@
 
 <body>
    
-    <div style="margin-top:50px;"></div>
+    <div style=" margin-top: 30px;">
+       </div>
 
     <div id="anotherB" class="flexible">
         <div id="main-btns" >
@@ -74,6 +75,7 @@
 				<div class="bar13"></div>
         </div>
         <div id="silo1">
+            <button class="linkers1 close-icon" style="color: red;">&times;</button> 
             <button class="linkers1 write">Write</button> 
             <button class="linkers1 reader">Read</button>
             <button class="linkers1 offlinereader">Read Unsaved</button>
@@ -91,20 +93,17 @@
         <div class="col-sm-2 flexible">
             <!--write name of the user-->
         </div>
-        <div class="col-sm-1 flexible">
+        <div class="col-sm-2 flexible">
+            <p class="dated"></p>
+        </div>
+        <div class="col-sm-2 flexible">
             <button id="write" class="write btn btn-primary btn-block">Write..</button>
         </div>
-        <div class="col-sm-2" >
-        </div>
-        <div class="col-sm-1 flexible">
+        <div class="col-sm-2 flexible">
             <button id="reader" class="reader btn btn-primary btn-block">Read..</button>
         </div>
         <div class="col-sm-2 flexible">
             <button id="" class="offlinereader btn btn-primary btn-block">Read offline</button>
-        </div>
-        <div class="col-sm-2 flexible">
-            <p class="dated"></p>
-            <p class="timed"></p>
         </div>
         <div class="col-sm-2 flexible">
             <a href="logout"><button class="btn btn-danger btn-block">logout!</button></a>
@@ -114,9 +113,14 @@
     <div id="identifier" style="padding-top:10px;">
         <!--write name of the user-->
     </div>
+    <div class="container-fluid">
+        <div class="row">
+                <div id="displayMessage" class="col-sm-6 offset-sm-3 flexible" style="margin-top: 30px; color: green;" ></div>
+        </div>
+    </div>
     
     <div id="diary" style="margin-top:20px; padding-top:20px;">
-        <form action="diaryserver.php" onSubmit="return validateForm(this)" method="post" role="form">
+        <form action="http://localhost/public/diary/server/diaryserver.php" onSubmit="return validateForm(this)" method="post" role="form">
             <label>Please write a subject before saving...</label>
                 <!--<input id="timer" type="hidden" name="timer" value=""; />-->
                 <input id="dated" type="hidden" name="dated" value=""; />
@@ -133,11 +137,9 @@
 		</form>  
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-                <div class="col-sm-3"></div>
-                <div id="writtenC" class="col-sm-6 flexible hidden" ></div>
-                <div class="col-sm-3"></div>
+                <div id="writtenC" class="col-sm-6 offset-sm-3 flexible hidden" ></div>
         </div>
     </div>
     
@@ -160,7 +162,6 @@
     </div>
 
     <div id="offlineread" class="flexible hidden offsetted">
-        <button id="view" class="btn btn-primary">view</button>
         <div class="table-responsive">
 			<table class="table table-condensed">
 				<thead>
@@ -177,6 +178,7 @@
             </table>
         </div>
     </div>
+    
     
     <div style="margin-top:100px;"></div>
 
@@ -195,14 +197,7 @@
     
 	<script type="text/javascript">
         $(document).ready(function(){
-            $("#view").click(function(event){
-                var test=$(".readoff");
-                console.log(test);
-                console.log(event);
-                console.log($("#tableBodyOff"));
-
-            });
-
+            
             $(".reader").click(function(){
                 if($("#read").hasClass("hidden")){
                     $("#read").removeClass("hidden");
@@ -219,10 +214,12 @@
                     $("#read").html(data);
                 })  */  
             });
+            
 
             $(".offlinereader").click(function(event){
                 console.log(event);
-                var dataread=allReader("topics");
+                //store for offline is subject
+                var dataread=allReader("subject");
                 console.log(dataread);
                 if(!$("#read").hasClass("hidden")){
                     $("#read").addClass("hidden");
@@ -282,8 +279,10 @@
          });
 
         function offreader(event){
+            var readid=event.target.id
+            console.log(readid);
             console.log(event);
-            
+            searchItems("entries", readid);
         }
          var day=new Date();
             var date=day.toDateString();
@@ -305,37 +304,33 @@
          }
          
             
-    function validateForm(){
+    function validateForm(form){
         var day=new Date();
         var date=day.toDateString();
         var time=day.toTimeString();
 
         $("#dated").val(date);
         
-        var payee={
+        var subject={
             date:$("#dated").val(),
-            title:$("#mtitle").val(),
-            message:$("#noise").val()            
+            subject:$("#mtitle").val(),
         }
-        var payee1={
+        var entries={
             date:$("#dated").val(),
-            title:$("#mtitle").val(),
-        }
-        var mess1={
-            title:$("#mtitle").val(),
+            subject:$("#mtitle").val(),
             message:$("#noise").val()  
         }
         
         var fail="";
-        fail = validateTitle(payee.title);
-        fail += validateMessage(payee.message);
+        fail = validateSubject(entries.subject);
+        fail += validateMessage(entries.message);
         //fail += validateSurname(form.subject.value);
 
         if(fail==""){
                     fetch("http://localhost/public/diary/diaryhandler.php", {
 							method:'POST',
 							headers:new Headers({'content-type':'application/json'}),
-							body:JSON.stringify(payee)
+							body:JSON.stringify(entries)
 						}).then(response=>{
                             if(response.status!==200){
                                 throw "There was an error communicating to the server. Your data has been stored locally.";
@@ -345,12 +340,14 @@
                             return response.text();
 						}).then(response=>{
                             displayMessage(response);
+                            returning();
                         }).catch(err=>{
                             
-                            dbWriter("topics", "message", payee1, mess1);
+                            dbWriter(subject, entries);
                             //dbWriter("message", mess1);
 							console.log(err);
-							displayMessage("message queued...");
+							displayMessage("data has been saved locally. \n Ensure you send to the server to ensure permanent storage");
+                            returning();
 						});
                    		
         }else{
@@ -362,6 +359,11 @@
 
     function displayMessage(msg){
         alert(msg);
+    }
+    function returning(){
+        $("#mtitle").val(""),
+        $("#noise").val("")            
+       
     }
 
     if(navigator.online){
