@@ -6,7 +6,7 @@ const sha1 = require("sha1");
 const {validateSignup, validateLogin}=require("./mymodules/validator");
 
 const pool=mysql.createPool({
-    host: 'finitecreations.co.ke',
+    host: '69.16.239.18',
     user: 'finitecr_jeffkibra',
     password: 'king.kin@keen',
     database: 'finitecr_contacted',
