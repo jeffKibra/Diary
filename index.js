@@ -117,6 +117,7 @@ app.post("/userlogin", (req, res)=>{
     
     pool.query(loginsql, [logedin.username, logedin.password], (err, results)=>{
        if(err) throw err;
+        console.log(results);
         if(results.length>0){
             var resid={
                 sessid: results[0].id,
@@ -125,11 +126,14 @@ app.post("/userlogin", (req, res)=>{
             res.send("/diary");
         }
         
-        if(results.length<=0) res.send("no");
+        if(results.length<=0){
+            console.log("none")
+            res.send("no");
+        }
+            
+        
         //res.send(JSON.stringify(resid));
-        
-        console.log(resid);
-        
+    
     });
     
 });

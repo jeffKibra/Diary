@@ -78,6 +78,8 @@
                         <h6>For your first login you must be online</h6>
                         <img src="./images/diary144.png" style="width:20%; height: auto;" alt="online diary logo" />
                         
+                        <p id="loginmessage"></p>
+                        
                         <form action="/userlogin" method="post" role="form" onSubmit="return logedin(this)" >
                             <div class="form-group">
                                 <input type="text" name="username" class="form-control col-sm-6 col-md-5 mx-auto" placeholder="username" />
@@ -132,21 +134,23 @@
                     if(response.status!==200){
                         throw "There was an error communicating to the server.\n Please try agin later.";
                     }
-                    console.log(response.status);
-                    //displayMessage("message sent...");
                     return response.text();
                     
 				}).then(response=>{
                     if(response=="no"){
+                        console.log(response);
+                        $("#loginmessage").html("Invalid username or password");
                         var data="Invalid username or password";
                         return false;
                     }
                     if(response=="/diary"){
+                        $("#loginmessage").html("login successful");
+                        data="login successful";
                         window.location.href=response;
                     }
+                    $("#loginmessage").html(data);
                     console.log(response);    
-                    return true;
-          
+                    
                 }).catch(err=>{
                          console.log("an error occurred");   
                     //dbReader(logindata);
