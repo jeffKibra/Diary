@@ -123,11 +123,12 @@ app.post("/userlogin", (req, res)=>{
                 sessid: results[0].id,
                 sessuser: results[0].username
             };
+            console.log(resid);
             res.send("/diary");
         }
         
         if(results.length<=0){
-            console.log("none")
+            console.log("invalid username or password");
             res.send("no");
         }
             
