@@ -5,7 +5,7 @@ const sha1 = require("sha1");
 //import validator script
 const {validateSignup, validateLogin}=require("./mymodules/validator");
 
-/*const pool=mysql.createPool({
+const pool=mysql.createPool({
     host: 'finitecreations.co.ke',
     user: 'finitecr_jeffkibra',
     password: 'king.kin@keen',
@@ -13,9 +13,9 @@ const {validateSignup, validateLogin}=require("./mymodules/validator");
     waitForConnections: true,
     connectionLimit: 100,
     queueLimit: 0
-});*/
+});
 
-const pool=mysql.createPool({
+/*const pool=mysql.createPool({
     host: 'localhost',
     user: 'finitecr_jeffkibra',
     password: 'king.kin@keen',
@@ -23,7 +23,7 @@ const pool=mysql.createPool({
     waitForConnections: true,
     connectionLimit: 100,
     queueLimit: 0
-});
+});*/
 
 /*var connection=mysql.createConnection({
     host: 'finitecreations.co.ke',
