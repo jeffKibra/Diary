@@ -305,7 +305,7 @@
          }
         
         function onlinereader(){
-            fetch("/onlineread").then(res=>{
+            fetch("/onlineread/2").then(res=>{
                 if(res.status!==200){
                     throw "there was an error communicating with the server. please try again later";
                 }
