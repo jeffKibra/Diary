@@ -69,40 +69,35 @@
 
     
     
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                
-                <br />
-                <h5>Please login to continue...</h5>
-                <hr />
-                <div class="flexible" id="errors" >
-                    <!--error message-->
+    <div class="container-fluid">
+        <div class="row" style="margin-top: 25px; width: 100%;">
+            <div class="col-sm-10 offset-sm-1 col-12 flexible">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Please login to continue...</h4>
+                        <h6>For your first login you must be online</h6>
+                        <img src="./images/diary144.png" style="width:10%; height: auto;" alt="online diary logo" />
+                        
+                        <form action="/userlogin" method="post" role="form" onSubmit="return logedin(this)" >
+                            <div class="form-group">
+                                <input type="text" name="username" class="form-control col-sm-6 col-md-5 mx-auto" placeholder="username" />
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" class="form-control col-sm-6 col-md-5 mx-auto" placeholder="Password" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" name="login" value="LOGIN" class="btn btn-confirm btn-block col-sm-6 col-md-5 mx-auto" />
+                            </div>
+                        </form>
+                        <br />
+                        
+                        <p>Do not have an account? <a href="signup">Sign up...</a>
+                    </div>
+
                 </div>
-    
-                <form action="./server/diaryserver.php" method="post" role="form" onSubmit="" >
-                    <div class="form-group">
-                        <input type="text" name="username" class="form-control col-sm-5 mx-auto" placeholder="username" />
-                    </div>
-                    <div class="form-group">
-                        <input type="password" name="password" class="form-control col-sm-5 mx-auto" placeholder="Password" />
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" name="login" value="LOGIN" class="btn btn-confirm btn-block col-sm-5 mx-auto" />
-                    </div>
-                </form>
-                
-                <br />
-                <div class="container">
-                    <div class="row flexible">
-                        <div class="col-sm-4 offset-sm-4">
-                            <p>Do not have an account? <a href="signup">Sign up...</a></p>
-                        </div>
-                    </div>
-                </div>
-                
             </div>
         </div>
+        
     </div>
 	
 	<div id="footer" style="position:fixed; bottom:0;">
@@ -116,48 +111,52 @@
     <script type="text/javascript" src="./scripts/indexedDB.js" ></script>
     <script type="text/javascript" src="./scripts/jquery.min.js"></script>
     <script type="text/javascript" >
-        function validateForm(){
-        var day=new Date();
-        var date=day.toDateString();
-        var time=day.toTimeString();
-        $("#timer").val(time);
-        $("#dated").val(date);
-
-        var payee={
-            date:$("#dated").val(),
-            time:$("#timer").val(),
-            title:$("#mtitle").val(),
-            message:$("#noise").val()            
-        }
         
-        var fail="";
-        fail = validateTitle(payee.title);
-        fail += validateMessage(payee.message);
-        //fail += validateSurname(form.subject.value);
+        function logedin(form){
+            var logindata={
+                username: form.username.value,
+                password: form.password.value
+            }
+        
+            var fail="";
+            fail = validateUsername(form.username.value);
+            fail += validatePassword(form.password.value);
+            //fail += validateSurname(form.subject.value);
 
-        if(fail==""){
-            fetch("diaryhandler.php", {
-							method:'POST',
-							headers:new Headers({'content-type':'application/json'}),
-							body:JSON.stringify(payee)
-						}).then(response=>{
-                            displayMessage("message sent...");
-                            return response.text();
-						}).then(response=>{
-                            displayMessage(response);
-                        }).catch(err=>{
-							dbWriter("fcrDiary", payee);
-							console.log(err);
-							displayMessage("message queued...");
-						});
+            if(fail==""){
+                fetch("/userlogin", {
+				    method:'POST',
+					headers:new Headers({'content-type':'application/json'}),
+					body:JSON.stringify(logindata)
+				}).then(response=>{
+                    if(response.status!==200){
+                        throw "There was an error communicating to the server.\n Please try agin later.";
+                    }
+                    console.log(response.status);
+                    //displayMessage("message sent...");
+                    return response.json();
+                    
+				}).then(response=>{
+                    console.log(response);          
+                }).catch(err=>{
+                         console.log("an error occurred");   
+                    //dbReader(logindata);
+                    //dbWriter("message", mess1);
+                    console.log(err);
+					
+                });
                    		
-        }else{
-            alert(fail); 
+            }else{
+                alert(fail); 
             
-        }
+            }
         return false;
     }
 
+        
+        
+
+        
     function displayMessage(msg){
         alert(msg);
     }

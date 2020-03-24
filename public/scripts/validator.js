@@ -1,5 +1,19 @@
+function validateUsername(field) {
+	if (field == "") return "No username was entered.\n";
+	return "";
+}
 
+function validatePassword(field) {
+	if (field == "") return "No password was entered.\n";
+	return "";
+}
 
+function validatePassword2(field1, field2) {
+	if (field1 == "" || field2 == "") return "No password was entered.\n";
+    if(field1 !== field2) return "passwords do not match";
+    
+	return "";
+}
 
 function validateFirstname(field) {
 	if (field == "") return "No name was entered.\n";

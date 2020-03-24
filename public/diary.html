@@ -120,7 +120,7 @@
     </div>
     
     <div id="diary" style="margin-top:20px; padding-top:20px;">
-        <form action="http://localhost/public/diary/server/diaryserver.php" onSubmit="return validateForm(this)" method="post" role="form">
+        <form action="/myentry" onSubmit="return validateForm(this)" method="post" role="form">
             <label>Please write a subject before saving...</label>
                 <!--<input id="timer" type="hidden" name="timer" value=""; />-->
                 <input id="dated" type="hidden" name="dated" value=""; />
@@ -210,6 +210,7 @@
                     $("#offlineread").addClass("hidden");
                 }
                 
+                onlinereader();
                 /*$.post("diaryserver.php", {read:"yes"}, function(data){
                     $("#read").html(data);
                 })  */  
@@ -302,6 +303,21 @@
             $("#silo1").css('display', 'none');
 
          }
+        
+        function onlinereader(){
+            fetch("/onlineread").then(res=>{
+                if(res.status!==200){
+                    throw "there was an error communicating with the server. please try again later";
+                }
+                return res.json();
+                
+            }).then(res=>{
+                console.log(res);
+                
+            }).catch(err=>{
+               console.log(err); 
+            });
+        }
          
             
     function validateForm(form){
@@ -327,28 +343,28 @@
         //fail += validateSurname(form.subject.value);
 
         if(fail==""){
-                    fetch("http://localhost/public/diary/diaryhandler.php", {
-							method:'POST',
-							headers:new Headers({'content-type':'application/json'}),
-							body:JSON.stringify(entries)
-						}).then(response=>{
-                            if(response.status!==200){
-                                throw "There was an error communicating to the server. Your data has been stored locally.";
-                            }
-                            console.log(response.status);
-                            //displayMessage("message sent...");
-                            return response.text();
-						}).then(response=>{
-                            displayMessage(response);
-                            returning();
-                        }).catch(err=>{
+            fetch("http://localhost/public/diary/diaryhandler.php", {
+                method:'POST',
+				headers:new Headers({'content-type':'application/json'}),
+				body:JSON.stringify(entries)
+            }).then(response=>{
+                if(response.status!==200){
+                    throw "There was an error communicating to the server. Your data has been stored locally.";
+                }
+                console.log(response.status);
+                //displayMessage("message sent...");
+                return response.text();
+            }).then(response=>{
+                displayMessage(response);
+                returning();
+            }).catch(err=>{
                             
-                            dbWriter(subject, entries);
-                            //dbWriter("message", mess1);
-							console.log(err);
-							displayMessage("data has been saved locally. \n Ensure you send to the server to ensure permanent storage");
-                            returning();
-						});
+                dbWriter(subject, entries);
+                //dbWriter("message", mess1);
+                console.log(err);
+                displayMessage("data has been saved locally. \n Ensure you send to the server to ensure permanent storage");
+                returning();
+            });
                    		
         }else{
             alert(fail); 

@@ -69,48 +69,58 @@
        </div>
 
     
-    <div class="container">
+    <div class="container-fluid">
+        <div class="row" style="margin-top: 25px; width: 100%;">
+            <div class="col-sm-10 offset-sm-1 col-12 flexible">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Please enter your details to have an account...</h4>
+                        <img src="./images/diary144.png" style="width:10%; height: auto;" alt="online diary logo" />
+                        
+                        <form action="usersignup" method="post" role="form" onSubmit="return signedup(this)" >
+                            <div class="form-group">
+                                <input type="text" name="firstname" class="form-control col-sm-6 col-md-5 mx-auto" placeholder="First name" />
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="surname" class="form-control col-sm-6 col-md-5 mx-auto" placeholder="Surname" />
+                            </div>
+                            <div class="form-group">
+                                <p id="userup" class="" ></p>
+                                <input type="text" id="username" name="username" class="form-control col-sm-6 col-md-5 mx-auto" placeholder="username" />
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="email" class="form-control col-sm-6 col-md-5 mx-auto" placeholder="Email" />
+                            </div>
+                            <div class="form-group">
+                                <input id="password" type="password" name="password" class="form-control col-sm-6 col-md-5 mx-auto" placeholder="Password" />
+                            </div>
+                            <div class="form-group">
+                                <input id="cpassword" type="password" name="cpassword" class="form-control col-sm-6 col-md-5 mx-auto" placeholder="Confirm password" />
+                            </div>
+                    
+                            <div class="form-group">
+                                <input type="submit" name="signup" value="SIGNUP" class="btn btn-confirm btn-block col-sm-6 col-md-5 mx-auto" />
+                            </div>
+                        </form> 
+                
+                        <br />
+                        
+                        <p class="card-text">Have an account? <a href="login">Log in...</a></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        
         <div class="row">
             <div class="col-sm-12">
                 
                 <br />
-                <h5>Please enter your details to have an account...</h5>
+                <h5></h5>
                 <hr />
     
-	           <form action="./server/diaryserver.php" method="post" role="form" onSubmit="return validateForm(this)" >
-                    <div class="form-group">
-                        <input type="text" name="firstname" class="form-control col-sm-5 mx-auto" placeholder="First name" />
-                    </div>
-                    <div class="form-group">
-                        <input type="text" name="surname" class="form-control col-sm-5 mx-auto" placeholder="Surname" />
-                    </div>
-                    <div class="form-group">
-                        <p id="userup" class="" ></p>
-                        <input type="text" id="username" name="username" class="form-control col-sm-5 mx-auto" placeholder="username" />
-                    </div>
-                    <div class="form-group">
-                        <input type="text" name="email" class="form-control col-sm-5 mx-auto" placeholder="Email" />
-                    </div>
-                    <div class="form-group">
-                        <input id="password" type="password" name="password" class="form-control col-sm-5 mx-auto" placeholder="Password" />
-                    </div>
-                    <div class="form-group">
-                        <input id="cpassword" type="password" name="cpassword" class="form-control col-sm-5 mx-auto" placeholder="Confirm password" />
-                    </div>
-                    
-                    <div class="form-group">
-                        <input type="submit" name="signup" value="SIGNUP" class="btn btn-confirm btn-block col-sm-5 mx-auto" />
-                    </div>
-                </form> 
-                
-                <br />
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-4 offset-sm-4 flexible">
-                            <p>Have an account? <a href="login">Log in...</a></p>
-                        </div>
-                    </div>
-                </div>
+	           
                 
             </div>
         </div>
@@ -129,71 +139,67 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $("#username").blur(function(){
-                var uservalue=$(this).val();
-        
-                $.post("diaryserver.php", {myusername:uservalue}, function(data){
-                    
-                    if(data=="yes"){
+                var data={
+                    username: $(this).val()
+                }
+                
+                fetch("/checkusername", {
+                    method: 'POST',
+                    headers: new Headers({'content-type': "application/json"}),
+                    body: JSON.stringify(data)
+                }).then(res=>{
+                    return res.json();
+                }).then(res=>{
+                    if(res=="yes"){
                         if($("#userup").hasClass("userno")){
                             $("#userup").removeClass("userno");
                         }
                         $("#userup").addClass("useryes");
                         data="username available";
-                    }else if(data=="no"){
+                    } 
+                    if(res=="no"){
                         if($("#userup").hasClass("useryes")){
                             $("#userup").removeClass("useryes");
                         }
                         $("#userup").addClass("userno");
                         data="username already taken. Please select another username";
-                    }else{
-                        
                     }
-                    $("#userup").html(data);
+                    
+                    $("#userup").html(res);
+                    console.log(res);
+                }).catch(err=>{
+                    console.log(err);
                 });
+        
+                
             }); 
         });
 
-        function validateForm(){
-        var day=new Date();
-        var date=day.toDateString();
-        var time=day.toTimeString();
-        $("#timer").val(time);
-        $("#dated").val(date);
+        function signedup(form){
 
-        var payee={
-            date:$("#dated").val(),
-            time:$("#timer").val(),
-            title:$("#mtitle").val(),
-            message:$("#noise").val()            
-        }
+            var signupdata={
+                firstname: form.firstname.value,
+                surname: form.surname.value,
+                username: form.username.value,
+                email: form.email.value,
+                password: form.password.value,
+                cpassword: form.cpassword.value
+            }
         
-        var fail="";
-        fail = validateTitle(payee.title);
-        fail += validateMessage(payee.message);
-        //fail += validateSurname(form.subject.value);
+            var fail="";
+            fail = validateFirstname(form.firstname.value);
+            fail += validateSurname(form.surname.value);
+            fail += validateUsername(form.username.value);
+            fail += validateEmail(form.email.value);
+            fail += validatePassword2(form.password.value, form.cpassword.value);
 
-        if(fail==""){
-            fetch("diaryhandler.php", {
-							method:'POST',
-							headers:new Headers({'content-type':'application/json'}),
-							body:JSON.stringify(payee)
-						}).then(response=>{
-                            displayMessage("message sent...");
-                            return response.text();
-						}).then(response=>{
-                            displayMessage(response);
-                        }).catch(err=>{
-							dbWriter("fcrDiary", payee);
-							console.log(err);
-							displayMessage("message queued...");
-						});
-                   		
-        }else{
-            alert(fail); 
-            
+            if(fail==""){
+                return true;
+            }else{
+                alert(fail); 
+                return false;
+            }
         }
-        return false;
-    }
 
     function displayMessage(msg){
         alert(msg);
