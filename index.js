@@ -2,12 +2,12 @@ const path = require("path");
 const express = require("express");
 const mysql=require("mysql2");
 
-const connection=mysql.createConnection({
+/*const connection=mysql.createConnection({
     host: 'localhost',
     user: 'finitecr_jeffkibra',
     password: 'king.kin@keen',
     database: 'diary'
-});
+});*/
 
 
 const app=express();
@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());//handle json data
 app.use(express.urlencoded({extended:false}));//handle form data
 
-app.get("/insert", (req, res)=>{
+/*app.get("/insert", (req, res)=>{
     connection.query('INSERT INTO "diaryid" (username, password) values("jdoe", "jdoe")', (err, results, fields)=>{
         
         console.log(results);
@@ -28,7 +28,7 @@ app.get("/insert", (req, res)=>{
     });
     res.send("table operation");
     //res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+});*/
 
 app.get("/", (req, res)=>{
     
