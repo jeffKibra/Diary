@@ -312,7 +312,7 @@
             fetch("/onlineread", {
                 method: 'POST',
                 headers: new Headers({'content-type': 'application/json'}),
-                body: JSON.stringify(apps);
+                body: JSON.stringify(apps)
             }).then(res=>{
                 if(res.status!==200){
                     throw "there was an error communicating with the server. please try again later";
