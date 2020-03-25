@@ -126,7 +126,36 @@
             //fail += validateSurname(form.subject.value);
 
             if(fail==""){
-                sessionReader(logindata, "permanentUser");
+                fetch("/userlogin", {
+				    method:'POST',
+					headers:new Headers({'content-type':'application/json'}),
+					body:JSON.stringify(logindata)
+				}).then(response=>{
+                    if(response.status!==200){
+                        throw "There was an error communicating to the server.\n Please try agin later.";
+                    }
+                    return response.json();
+                    
+				}).then(response=>{
+                    if(response.value=="no"){
+                        console.log(response.value);
+                        $("#loginmessage").html("Invalid username or password");
+                        
+                    }
+                    if(response.id!==""){//add details to indexeddb
+                        $("#loginmessage").html("login successful");
+                        sessionWriter(response, "permanentUser");
+                        //window.location.href=response;
+                    }
+                    console.log(response);     
+                }).catch(err=>{
+                    
+                         console.log("an error occurred");   
+                    //dbReader(logindata);
+                    //dbWriter("message", mess1);
+                    console.log(err);
+					
+                });
                    		
             }else{
                 alert(fail); 

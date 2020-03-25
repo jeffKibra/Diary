@@ -5,7 +5,7 @@ const sha1 = require("sha1");
 //import validator script
 const {validateSignup, validateLogin}=require("./mymodules/validator");
 
-const pool=mysql.createPool({
+/*const pool=mysql.createPool({
     host: '69.16.239.18',
     user: 'finitecr_jeffkibra',
     password: 'king.kin@keen',
@@ -13,9 +13,9 @@ const pool=mysql.createPool({
     waitForConnections: true,
     connectionLimit: 100,
     queueLimit: 0
-});
+});*/
 
-/*const pool=mysql.createPool({
+const pool=mysql.createPool({
     host: 'localhost',
     user: 'finitecr_jeffkibra',
     password: 'king.kin@keen',
@@ -23,7 +23,7 @@ const pool=mysql.createPool({
     waitForConnections: true,
     connectionLimit: 100,
     queueLimit: 0
-});*/
+});
 
 /*var connection=mysql.createConnection({
     host: 'finitecreations.co.ke',
@@ -50,11 +50,11 @@ app.get("/", (req, res)=>{
 });
 
 app.post("/onlineread", (req, res)=>{
-    var sql="SELECT * FROM mydiary WHERE id = ? AND username = ?";
+    var sql="SELECT * FROM mydiary WHERE id = ?";
     var id=req.body.id;
     var username = req.body.username; 
     //var sql1="SELECT `id` FROM diaryid WHERE `username` = ?";
-    pool.query(sql, [id, username], (err, results)=>{
+    pool.query(sql, [id], (err, results)=>{
         if(err) throw err;
         console.log(results);
         var data=JSON.stringify(results);
@@ -120,16 +120,19 @@ app.post("/userlogin", (req, res)=>{
         console.log(results);
         if(results.length>0){
             var resid={
-                sessid: results[0].id,
-                sessuser: results[0].username
+                id: results[0].id,
+                username: results[0].username
             };
             console.log(resid);
-            res.send("/diary");
+            res.send(resid);
         }
         
         if(results.length<=0){
+            resid={
+                value: "no"
+            };
             console.log("invalid username or password");
-            res.send("no");
+            res.send(resid);
         }
             
         
