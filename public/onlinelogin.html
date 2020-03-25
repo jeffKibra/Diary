@@ -75,7 +75,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Please login to continue...</h4>
-                        <h6>For your first login you must be online</h6>
+                        <h6>this is the online login page. Ensure that you are online... <a href="/login">offline login?</a></h6>
                         <img src="./images/diary144.png" style="width:20%; height: auto;" alt="online diary logo" />
                         
                         <p id="loginmessage"></p>
@@ -112,6 +112,7 @@
     <script type="text/javascript" src="./scripts/validator.js"></script>
     <script type="text/javascript" src="./scripts/indexedDB.js" ></script>
     <script type="text/javascript" src="./scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="./scripts/sha1encryption.js"></script>
     <script type="text/javascript" >
         
         function logedin(form){
@@ -144,7 +145,7 @@
                     }
                     if(response.id!==""){//add details to indexeddb
                         $("#loginmessage").html("login successful");
-                        sessionWriter(response, "permanentUser");
+                        permanentWriter(response);
                         //window.location.href=response;
                     }
                     console.log(response);     

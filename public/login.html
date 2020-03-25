@@ -63,6 +63,8 @@
 </head>
 
 <body>
+   <!-- <p id="identified"></p>
+    <p id="username1"></p>-->
     
     <div style=" margin-top: 30px;">
        </div>
@@ -75,7 +77,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Please login to continue...</h4>
-                        <h6>For your first login you must be online</h6>
+                        <h6>this is the offline login page... you must have logedin using the <a href="/onlinediary">online login page</a></h6>
                         <img src="./images/diary144.png" style="width:20%; height: auto;" alt="online diary logo" />
                         
                         <p id="loginmessage"></p>
@@ -112,12 +114,32 @@
     <script type="text/javascript" src="./scripts/validator.js"></script>
     <script type="text/javascript" src="./scripts/indexedDB.js" ></script>
     <script type="text/javascript" src="./scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="./scripts/sha1encryption.js"></script>
     <script type="text/javascript" >
+        $(document).ready(function(){
+            setInterval(loader, 2000);
+        });
+        
+        function loader(){//check if the fields have values before redirecting
+            var id=localStorage.getItem('id');
+            var username=localStorage.getItem('username');
+            
+            if(id !== null && username !== null){
+                window.location.href="/diary";
+            }
+            /*if($("#identified").html()!=="" && $("#username1").html()!==""){
+                window.location.href="/diary";
+            }*/
+        }
+        
+        
         
         function logedin(form){
+            var enct1="ki!*^90";
+            var enct2="63&%&of"; 
             var logindata={
                 username: form.username.value,
-                password: form.password.value
+                password: SHA1(enct1+form.password.value+enct2)
             }
         
             var fail="";

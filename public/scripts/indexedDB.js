@@ -153,7 +153,7 @@ function allReader(mystore){//recieves name of the store
 			}
 		}
 
-function sessionWriter(details, storeToUse){
+function permanentWriter(details){
 			var db=null,
 			request=window.indexedDB.open("fcrDiary", 2);
 
@@ -163,7 +163,7 @@ function sessionWriter(details, storeToUse){
 
 				console.log(details);
 				//select stores for read and write
-				var transaction=db.transaction([storeToUse], "readwrite");
+				var transaction=db.transaction(["permanentUser"], "readwrite");
 				transaction.oncomplete=function(){
 					console.log("all done!");
 				}
@@ -171,7 +171,7 @@ function sessionWriter(details, storeToUse){
 					console.error("an error has occurred when opening the store: "+transaction.error);
 				}
 				//get the store
-				var usedStore=transaction.objectStore(storeToUse);
+				var usedStore=transaction.objectStore("permanentUser");
 		
 				var usedRequest=usedStore.add(details);
 				usedRequest.onsuccess=function(event){
@@ -228,7 +228,7 @@ function sessionWriter(details, storeToUse){
 			}
 		}
 
-function tempWriter(details, storeToUse){
+function sessionWriter(details){
 			var db=null,
 			request=window.indexedDB.open("fcrDiary", 2);
 
@@ -238,7 +238,7 @@ function tempWriter(details, storeToUse){
 
 				console.log(details);
 				//select stores for read and write
-				var transaction=db.transaction([storeToUse], "readwrite");
+				var transaction=db.transaction(["sessionUser"], "readwrite");
 				transaction.oncomplete=function(){
 					console.log("all done!");
 				}
@@ -246,13 +246,14 @@ function tempWriter(details, storeToUse){
 					console.error("an error has occurred when opening the store: "+transaction.error);
 				}
 				//get the store
-				var usedStore=transaction.objectStore(storeToUse);
+				var usedStore=transaction.objectStore("sessionUser");
 		
 				var usedRequest=usedStore.add(details);
 				usedRequest.onsuccess=function(event){
                     var msg="login successful";
                     document.getElementById("loginmessage").innerHTML=msg;
 					console.log();
+                    sessionReader()
 				}
                 usedRequest.onerror=function(e){
                     var errorMsg="invalid username or password"+ e.target.error.name;
@@ -261,9 +262,7 @@ function tempWriter(details, storeToUse){
                 }
 				
 			}
-
-			
-
+            
 			request.onerror=function(){
 				console.error("an error has occurred: ");
 			}
@@ -295,37 +294,34 @@ function sessionReader(details, storeToUse){
            var userdetails = event.target.result;
            if(userdetails == undefined){
                document.getElementById("loginmessage").innerHTML="invalid username or password";
-           }else if(userdetails.username !== "" && userdetails.id !== ""){
-               document.getElementById("loginmessage").innerHTML="login successful. redirecting...";
-               fetch("/diary");
+           }else if(userdetails.username !== "" && userdetails.id !== "" && userdetails.password !== ""){
+               if(details.username === userdetails.username && details.password === userdetails.password){
+                    document.getElementById("loginmessage").innerHTML="login successful. redirecting...";
+                    //document.getElementById("identified").innerHTML= userdetails.id;
+                    //document.getElementById("username1").innerHTML= userdetails.username;
+                    localStorage.setItem('id', userdetails.id);
+                    localStorage.setItem('username', userdetails.username);
+                    //target="/diary"
+                    //sessionWriter(userdetails);
+               }
+               else{
+                   document.getElementById("loginmessage").innerHTML="invalid username or password";
+               }
+               
            }
-           console.log(event.target);
+           //console.log(event.target);
 	   }
-        
-        /*var customers=[];
-        store.openCursor().onsuccess=function(event){
-	       var cursor=event.target.result;
-	       if(cursor){
-               //console.log(cursor.value);
-                customers.push(cursor.value);
-                cursor.continue();
-           }
-            else{
-                createTable(customers);
-		      console.log(customers);
-            }
-					
-        }*/
     }
 		
-
     request.onerror=function(){
 		console.error("an error has occurred: ");
 	}
+
 }
 
-function relocate(){
-    window.location.href("/diary");
+function relocate(value){
+    console.log(value);
+    window.location.href(value);
 }
 
 

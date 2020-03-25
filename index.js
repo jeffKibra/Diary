@@ -72,6 +72,14 @@ app.get("/diary", (req, res)=>{
     res.sendFile(path.join(__dirname, 'public', 'diary.html'));
 });
 
+app.get("/logout", (req, res)=>{
+    res.sendFile(path.join(__dirname, 'public', 'logout.html'));
+});
+
+app.get("/onlinelogin", (req, res)=>{
+    res.sendFile(path.join(__dirname, 'public', 'onlinelogin.html'));
+});
+
 app.get("/login", (req, res)=>{
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
@@ -121,9 +129,12 @@ app.post("/userlogin", (req, res)=>{
         if(results.length>0){
             var resid={
                 id: results[0].id,
-                username: results[0].username
+                username: results[0].username,
+                password: results[0].password
             };
+            
             console.log(resid);
+            
             res.send(resid);
         }
         

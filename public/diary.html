@@ -79,7 +79,7 @@
             <button class="linkers1 write">Write</button> 
             <button class="linkers1 reader">Read</button>
             <button class="linkers1 offlinereader">Read Unsaved</button>
-            <a href="" ><button class="linkers1">Logout</button></a> 
+            <a href="/logout" ><button class="linkers1">Logout</button></a> 
             <a href="../" ><button class="linkers1">Visit Homepage</button></a> 
 
         </div>
@@ -106,20 +106,16 @@
             <button id="" class="offlinereader btn btn-primary btn-block">Read offline</button>
         </div>
         <div class="col-sm-2 flexible">
-            <a href="logout"><button class="btn btn-danger btn-block">logout!</button></a>
+            <a href="/logout"><button class="btn btn-danger btn-block">logout!</button></a>
         </div>
     </div>
 
-    <div id="identifier" style="padding-top:10px;">
+    <div id="identifier" class="flexible" style=" margin-top:50px;">
         <!--write name of the user-->
-    </div>
-    <div class="container-fluid">
-        <div class="row">
-                <div id="displayMessage" class="col-sm-6 offset-sm-3 flexible" style="margin-top: 30px; color: green;" ></div>
-        </div>
+        <p id="identified" ></p>
     </div>
     
-    <div id="diary" style="margin-top:20px; padding-top:20px;">
+    <div id="diary" style="margin-top:20px; padding-top:10px;">
         <form action="/myentry" onSubmit="return validateForm(this)" method="post" role="form">
             <label>Please write a subject before saving...</label>
                 <!--<input id="timer" type="hidden" name="timer" value=""; />-->
@@ -194,9 +190,22 @@
 	<script type="text/javascript" src="./scripts/jquery.min.js"></script>    
     <script type="text/javascript" src="./scripts/validator.js"></script>
     <script type="text/javascript" src="./scripts/indexedDB.js"></script>
+    <script type="text/javascript" src="./scripts/sha1encryption.js"></script>
     
 	<script type="text/javascript">
         $(document).ready(function(){
+            var id=localStorage.getItem('id');
+            var username=localStorage.getItem('username');
+            if(id!==null && username !== null){
+                $("#identified").html("Welcome back "+username);
+                console.log(id);
+                console.log(username);
+            }
+            else{
+                 $("#identified").html("You must be loged in to access this page. Redirecting...");
+                window.location.href="/login";
+            }
+            //setTimeout(loader, 2000);
             
             $(".reader").click(function(){
                 if($("#read").hasClass("hidden")){
@@ -237,9 +246,6 @@
                     $("#read").html(data);
                 })  */ 
             });
-
-            
-           
 
             $(".write").click(function(){
                 if(!$("#read").hasClass("hidden")){
@@ -297,6 +303,7 @@
             $("#silo1").css('width', '65%');
             $("#silo1").css('display', 'block');
         }
+    
 
         function hider(){
             $("#silo1").css('width', '0');
@@ -395,12 +402,6 @@
 	}else{
 	 	console.log("you are offline");
 	}
-
-            
-            
-
-    
-
          /* 
             $(':submit').click(function(){
                    var data1=$(this).attr("name");
@@ -420,11 +421,7 @@
                    }
         
                });*/
-            
-       
-		
-				
-		
+            	
 	</script>
     
 	
