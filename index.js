@@ -80,8 +80,8 @@ app.get("/signup", (req, res)=>{
     res.sendFile(path.join(__dirname, 'public', 'signup.html'));
 });
 
-app.post("/checkusername", (req, res)=>{
-    var username=req.body.username;
+app.get("/checkusername/:username", (req, res)=>{
+    var username=req.params.username;
     var testsql="SELECT * FROM diaryid WHERE username = ?";
     pool.getConnection((err, connection)=>{
         if(err) throw err;
