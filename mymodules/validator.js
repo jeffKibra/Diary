@@ -62,7 +62,18 @@ function validateLogin(login){
 	return fail;
 }
 
+function validateEntry(diaryEntry){
+	var fail="";
+	fail += validateSubject(diaryEntry.subject);
+	fail += validateMessage(diaryEntry.message);
+	
+
+	return fail;
+}
+
+
 module.exports={
     validateSignup,
-    validateLogin
+    validateLogin,
+    validateEntry
 }

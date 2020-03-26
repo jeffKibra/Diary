@@ -3,9 +3,9 @@ const express = require("express");
 const mysql = require("mysql");
 const sha1 = require("sha1");
 //import validator script
-const {validateSignup, validateLogin}=require("./mymodules/validator");
+const {validateSignup, validateLogin, validateEntry}=require("./mymodules/validator");
 
-const pool=mysql.createPool({
+/*const pool=mysql.createPool({
     host: '69.16.239.18',
     user: 'finitecr_jeffkibra',
     password: 'king.kin@keen',
@@ -13,9 +13,9 @@ const pool=mysql.createPool({
     waitForConnections: true,
     connectionLimit: 100,
     queueLimit: 0
-});
+});*/
 
-/*const pool=mysql.createPool({
+const pool=mysql.createPool({
     host: 'localhost',
     user: 'finitecr_jeffkibra',
     password: 'king.kin@keen',
@@ -23,7 +23,7 @@ const pool=mysql.createPool({
     waitForConnections: true,
     connectionLimit: 100,
     queueLimit: 0
-});*/
+});
 
 /*var connection=mysql.createConnection({
     host: 'finitecreations.co.ke',
@@ -150,6 +150,40 @@ app.post("/userlogin", (req, res)=>{
         //res.send(JSON.stringify(resid));
     
     });
+    
+});
+
+app.post("/diaryinput", (req, res)=>{
+    var userinput={
+        id: req.body.id,
+        date: req.body.date,
+        time: req.body.time,
+        subject: req.body.subject,
+        mywrite: req.body.message
+    };
+    var validated=validateEntry(userinput);
+    if(validated!==""){
+        res.send(validated);
+    }
+    var loginsql="INSERT INTO mydiary(id, date, time, title, mywrite) values(?,?,?,?,?)";
+    
+    pool.query(loginsql, [userinput.id, userinput.date, userinput.time, userinput.subject, userinput.mywrite], (err, results)=>{
+       if(err) throw err;
+        console.log(results);
+        
+        /*if(results.length<=0){
+            resid={
+                value: "no"
+            };
+            console.log("invalid username or password");
+            
+        }*/
+            
+        
+        //res.send(JSON.stringify(resid));
+    
+    });
+    res.send("added successfully");
     
 });
 

@@ -113,6 +113,8 @@
     <div id="identifier" class="flexible" style=" margin-top:50px;">
         <!--write name of the user-->
         <p id="identified" ></p>
+        <p id="displayMessage" ></p>
+        <p id="displayError" ></p>
     </div>
     
     <div id="diary" style="margin-top:20px; padding-top:10px;">
@@ -120,6 +122,7 @@
             <label>Please write a subject before saving...</label>
                 <!--<input id="timer" type="hidden" name="timer" value=""; />-->
                 <input id="dated" type="hidden" name="dated" value=""; />
+                <input id="timed" type="hidden" name="timed" value=""; />
             <div class="flexible form-group">
                 <input id="mtitle" class="form-control col-sm-4 mx-auto" type="text" name="title" placeholder="subject" />
             </div>
@@ -158,6 +161,7 @@
     </div>
 
     <div id="offlineread" class="flexible hidden offsetted">
+        <a href="/ofllinesave" id="offlinesave" class="btn btn-primary">Save all...</a>
         <div class="table-responsive">
 			<table class="table table-condensed">
 				<thead>
@@ -313,8 +317,8 @@
         
         function onlinereader(){
             var apps={
-              id: 1,
-                username: 'jkibera'
+                id: localStorage.getItem('id'),
+                username: localStorage.getItem('username')
             };
             fetch("/onlineread", {
                 method: 'POST',
@@ -341,27 +345,28 @@
         var time=day.toTimeString();
 
         $("#dated").val(date);
+        $("#timed").val(time);
         
-        var subject={
-            date:$("#dated").val(),
-            subject:$("#mtitle").val(),
+        var diaryEntry={
+            id: localStorage.getItem('id'),
+            date: $("#dated").val(),
+            time: $("#timed").val(),
+            subject: $("#mtitle").val(),
+            message: $("#noise").val()  
         }
-        var entries={
-            date:$("#dated").val(),
-            subject:$("#mtitle").val(),
-            message:$("#noise").val()  
-        }
+        
+        
         
         var fail="";
-        fail = validateSubject(entries.subject);
-        fail += validateMessage(entries.message);
+        fail = validateSubject(diaryEntry.subject);
+        fail += validateMessage(diaryEntry.message);
         //fail += validateSurname(form.subject.value);
 
         if(fail==""){
-            fetch("http://localhost/public/diary/diaryhandler.php", {
+            fetch("/diaryinput", {
                 method:'POST',
 				headers:new Headers({'content-type':'application/json'}),
-				body:JSON.stringify(entries)
+				body:JSON.stringify(diaryEntry)
             }).then(response=>{
                 if(response.status!==200){
                     throw "There was an error communicating to the server. Your data has been stored locally.";
@@ -373,7 +378,16 @@
                 displayMessage(response);
                 returning();
             }).catch(err=>{
-                            
+                var subject={
+                    date:$("#dated").val(),
+                    subject:$("#mtitle").val(),
+                }
+                var entries={
+                    date: $("#dated").val(),
+                    time: $("#timed").val(),
+                    subject: $("#mtitle").val(),
+                    message: $("#noise").val()  
+                } 
                 dbWriter(subject, entries);
                 //dbWriter("message", mess1);
                 console.log(err);
