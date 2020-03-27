@@ -1,4 +1,4 @@
-function allReader(mystore){//recieves name of the store
+        function allReader(mystore){//recieves name of the store
 			var db=null,
 			request=window.indexedDB.open("fcrDiary", 2);
 			request.onsuccess=function(event){
@@ -24,7 +24,7 @@ function allReader(mystore){//recieves name of the store
 						cursor.continue();
 					}
 					else{
-						createTable(customers);
+						createTable(customers, "tableBodyOff");
 						console.log(customers);
 					}
 					
@@ -38,9 +38,9 @@ function allReader(mystore){//recieves name of the store
 		
 		}
 
-		function createTable(data){
+		function createTable(data, id){
 			console.log(data);
-            document.getElementById("tableBodyOff").innerHTML="";
+            document.getElementById(id).innerHTML="";
 			//document.getElementById("tableBody").innerHTML=data[0].title;
 			for(var i=0;i<data.length; i++){
 				var nodeToAdd=document.createElement("tr");
@@ -60,13 +60,174 @@ function allReader(mystore){//recieves name of the store
 				bdata.appendChild(btn);
 				nodeToAdd.appendChild(bdata);
 				console.log(objectval);
-				document.getElementById("tableBodyOff").appendChild(nodeToAdd);
+				document.getElementById(id).appendChild(nodeToAdd);
 				btn.onclick=offreader;
 			}
 			
 		}
 
-		function dbWriter(subject, entries){
+		function ondbWriter(subject, entries){
+			var db=null,
+			request=window.indexedDB.open("fcrDiary", 2);
+
+			request.onsuccess=function(event){
+				//console.log(event);
+				db=event.target.result;
+
+				//console.log(subject, entries);
+				//select stores for read and write
+				var transaction=db.transaction(["onlineSubject", "onlineEntries"], "readwrite");
+				transaction.oncomplete=function(){
+					console.log("all done!");
+				}
+				transaction.onerror=function(){
+					console.error("an error has occurred when opening the store: "+transaction.error);
+				}
+                
+				//get the store
+				var subjectStore=transaction.objectStore("onlineSubject");
+				var entriesStore=transaction.objectStore("onlineEntries");
+                    
+				//add data
+				var subjectRequest=subjectStore.add(subject);
+				subjectRequest.onsuccess=function(event){
+                    var msg="the subject has been saved locally";
+                    document.getElementById("displayMessage").innerHTML=msg;
+					console.log();
+				}
+                subjectRequest.onerror=function(e){
+                    var errorMsg="subject not saved".e.target.error.name;
+                    document.getElementById("displayError").innerHTML=errorMsg;
+                    console.log(errorMsg);
+                }
+				var entriesRequest=entriesStore.add(entries);
+				entriesRequest.onsuccess=function(event){
+                    msg="Your entries have been saved locally ";
+                    document.getElementById("displayMessage").innerHTML=msg;
+					console.log();
+				}
+                entriesRequest.onerror=function(e){
+                    errorMsg="entries not saved".e.target.error.name;
+                    document.getElementById("displayError").innerHTML=errorMsg;
+                    console.log(errorMsg);
+                }
+			}
+			
+			request.onerror=function(){
+				console.error("an error has occurred: ");
+			}
+		}
+
+        function onReader(mystore){//function to read stored data from the server recieves name of the store
+			var db=null,
+			request=window.indexedDB.open("fcrDiary", 2);
+			request.onsuccess=function(event){
+				db=event.target.result;
+
+				//select the store for reading
+				var transaction=db.transaction([mystore]);
+				transaction.oncomplete=function(){
+					console.log("all done!");
+				}
+				transaction.onerror=function(){
+					console.error("an error has occurred: "+transaction.error);
+				}
+				//get the store
+				var store=transaction.objectStore(mystore);
+				//retrieve data
+				var customers=[];//array to hold values
+				store.openCursor().onsuccess=function(event){
+					var cursor=event.target.result;
+					if(cursor){
+						//console.log(cursor.value);
+						customers.push(cursor.value);
+						cursor.continue();
+					}
+					else{
+						createTableOn(customers, "tableBodyOn");
+						console.log(customers);
+					}
+				}
+			}
+		
+			request.onerror=function(){
+				console.error("an error has occurred: ");
+			}
+		}
+
+        function createTableOn(data, id){
+			console.log(data);
+            document.getElementById(id).innerHTML="";
+			//document.getElementById("tableBody").innerHTML=data[0].title;
+			for(var i=0;i<data.length; i++){
+				var nodeToAdd=document.createElement("tr");
+				var objectval=Object.values(data[i]);
+				objectval.forEach(element => {
+					var tdata=document.createElement("td");
+					var ttext=document.createTextNode(element);
+					tdata.appendChild(ttext);
+					nodeToAdd.appendChild(tdata);
+				});
+				var bdata=document.createElement("td");
+				var btn=document.createElement("button");
+				btn.setAttribute("class", "btn btn-primary readoff");
+				btn.setAttribute("id", data[i].subject);
+				
+				btn.innerHTML="read";
+				bdata.appendChild(btn);
+				nodeToAdd.appendChild(bdata);
+				console.log(objectval);
+				document.getElementById(id).appendChild(nodeToAdd);
+				btn.onclick=serverreader;
+			}
+			
+		}
+
+        function ondbClear(substore, entstore){//function clear data in stores to avoid duplication
+			var db=null,
+			request=window.indexedDB.open("fcrDiary", 2);
+
+			request.onsuccess=function(event){
+				//console.log(event);
+				db=event.target.result;
+                
+				//select stores for read and write
+				var transaction=db.transaction([substore, entstore], "readwrite");
+				transaction.oncomplete=function(){
+					console.log("all done!");
+				}
+				transaction.onerror=function(){
+					console.error("an error has occurred when opening the store: "+transaction.error);
+				}
+                
+				//get the store
+				var subjectStore=transaction.objectStore(substore);
+				var entriesStore=transaction.objectStore(entstore);
+                
+                //delete added data before writing
+                var clearSubject=subjectStore.clear();
+                var clearEntries=entriesStore.clear();
+                
+                clearSubject.onsuccess=function(event){
+                    console.log("delete data in subjects success");
+                }
+                 clearSubject.onerror=function(event){
+                    console.log("delete data in subjects failed");
+                }
+                  clearEntries.onsuccess=function(event){
+                    console.log("delete data in entries success");
+                }
+                   clearEntries.onerror=function(event){
+                    console.log("delete data in entries failed");
+                }
+			}
+			
+			request.onerror=function(){
+				console.error("an error has occurred: ");
+			}
+		}
+        
+        function dbWriter(subject, entries){//function to write data not saved online
 			var db=null,
 			request=window.indexedDB.open("fcrDiary", 2);
 
@@ -101,7 +262,7 @@ function allReader(mystore){//recieves name of the store
                 }
 				var entriesRequest=entriesStore.add(entries);
 				entriesRequest.onsuccess=function(event){
-                    msg="Your entries have been saved locally \n please ensure you go online and save to the server for permanent storage";
+                    msg="Your entries have been saved locally ";
                     document.getElementById("displayMessage").innerHTML=msg;
 					console.log();
 				}
@@ -112,48 +273,13 @@ function allReader(mystore){//recieves name of the store
                 }
 			}
 
-			request.onupgradeneeded=function(event){
-				db=event.target.result;
-				//console.log(event);
-				if(event.oldVersion<1){
-					//didnt exist 
-					var subjectStore=db.createObjectStore("subject", {autoIncrement:true});//offline subject store
-					var entriesStore=db.createObjectStore("entries", {autoIncrement:true});//offline entries store
-                    db.createObjectStore("onlineSubject", { autoIncrement: true });//online subject store
-                    db.createObjectStore("onlineEntries", { autoIncrement: true });//online entries store
-                    db.createObjectStore("sessionUser", { keyPath: "username" });//session data for the user
-                    db.createObjectStore("permanentUser", { keyPath: "username" });//permanent user details for logging in and out.
-				}
-				//if it exists and version less than 2
-				if(event.oldVersion<2){
-					var subjectStore=request.transaction.objectStore("subject");
-					var entriesStore=request.transaction.objectStore("entries");
-                    var onlinesubject=request.transaction.objectStore("onlineSubject");
-                    var onlineentry=request.transaction.objectStore("onlineEntries");
-					subjectStore.createIndex("date", "date", {unique:false});
-                    subjectStore.createIndex("subject", "subject", {unique:false});
-                    
-					entriesStore.createIndex("subject", "subject", {unique:false});
-                    entriesStore.createIndex("date", "date", {unique:false});
-                    
-                    onlinesubject.createIndex("date", "date", {unique: false});
-                    onlinesubject.createIndex("subject", "subject", {unique: false});
-                    
-                    onlineentry.createIndex("date", "date", {unique: false});
-                    onlineentry.createIndex("subject", "subject", {unique: false});
-                    
-                    //entriesStore.createIndex("by_email", "email");
-					//store2.createIndex("by_name", "name");
-					//store2.createIndex("by_email", "email");
-				}
-			};
-
 			request.onerror=function(){
 				console.error("an error has occurred: ");
 			}
 		}
 
-function permanentWriter(details){
+
+        function permanentWriter(details){//function to store the users details locally
 			var db=null,
 			request=window.indexedDB.open("fcrDiary", 2);
 
@@ -177,6 +303,8 @@ function permanentWriter(details){
 				usedRequest.onsuccess=function(event){
                     var msg="You can now login when offline";
                     document.getElementById("loginmessage").innerHTML=msg;
+                    localStorage.setItem('permanentUsername', details.username);
+                    localStorage.setItem('permanentId', details.id);
 					console.log();
 				}
                 usedRequest.onerror=function(e){
@@ -319,13 +447,8 @@ function sessionReader(details, storeToUse){
 
 }
 
-function relocate(value){
-    console.log(value);
-    window.location.href(value);
-}
 
-
-function searchItems(mystore, value){
+function searchItems(mystore, value){//reads value at a time
 	var db=null,
     request=window.indexedDB.open("fcrDiary", 2);
     request.onsuccess=function(event){
@@ -353,16 +476,18 @@ function searchItems(mystore, value){
             var cursor=event.target.result;
             if(cursor){
                 customers.push(cursor.value);
-                ccontent="<h3></h3><br/><small>"+cursor.value.date+"</small><br/>"+cursor.value.message+"<br />";
-                document.getElementById("writtenC").innerHTML+=ccontent;
                 /*if(cursor.value.subject==value){
                     customers.push(cursor.value);
                 }*/
                 cursor.continue();
             }else{
-                
                 //createTable(customers);
+                customers.forEach(value=>{
+                    ccontent="<h4>"+value.subject+"</h4><br/><small>"+value.date+ ":" + value.time+"</small><br/>"+value.mywrite+"<br />";
+                    document.getElementById("writtenC").innerHTML+=ccontent; 
+                });
 		      console.log(customers);
+                
             }
         }
         

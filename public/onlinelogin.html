@@ -115,6 +115,18 @@
     <script type="text/javascript" src="./scripts/sha1encryption.js"></script>
     <script type="text/javascript" >
         
+        $(document).ready(function(){            
+            setInterval(loader, 2000);
+        });
+        
+        function loader(){//check if the fields have values before redirecting
+            var id=localStorage.getItem('permanentId');
+            var username=localStorage.getItem('permanentUsername');
+            if(id !== null && username !== null){
+                window.location.href="/login";
+            }
+        }
+        
         function logedin(form){
             var logindata={
                 username: form.username.value,

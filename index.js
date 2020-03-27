@@ -15,6 +15,7 @@ const {validateSignup, validateLogin, validateEntry}=require("./mymodules/valida
     queueLimit: 0
 });*/
 
+
 const pool=mysql.createPool({
     host: 'localhost',
     user: 'finitecr_jeffkibra',
@@ -165,7 +166,7 @@ app.post("/diaryinput", (req, res)=>{
     if(validated!==""){
         res.send(validated);
     }
-    var loginsql="INSERT INTO mydiary(id, date, time, title, mywrite) values(?,?,?,?,?)";
+    var loginsql="INSERT INTO mydiary(id, date, time, subject, mywrite) values(?,?,?,?,?)";
     
     pool.query(loginsql, [userinput.id, userinput.date, userinput.time, userinput.subject, userinput.mywrite], (err, results)=>{
        if(err) throw err;

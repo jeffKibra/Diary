@@ -64,9 +64,6 @@
 </head>
 
 <body>
-   
-    <div style=" margin-top: 30px;">
-       </div>
 
     <div id="anotherB" class="flexible">
         <div id="main-btns" >
@@ -89,7 +86,7 @@
         </div>
     </div>
 
-    <div id="logoutarea" class="row">
+    <div id="logoutarea" class="row" style="background-color: #00ffaa;">
         <div class="col-sm-2 flexible">
             <!--write name of the user-->
         </div>
@@ -110,14 +107,14 @@
         </div>
     </div>
 
-    <div id="identifier" class="flexible" style=" margin-top:50px;">
+    <div id="identifier" class="flexible" >
         <!--write name of the user-->
         <p id="identified" ></p>
         <p id="displayMessage" ></p>
         <p id="displayError" ></p>
     </div>
     
-    <div id="diary" style="margin-top:20px; padding-top:10px;">
+    <div id="diary" style="padding-top:10px;">
         <form action="/myentry" onSubmit="return validateForm(this)" method="post" role="form">
             <label>Please write a subject before saving...</label>
                 <!--<input id="timer" type="hidden" name="timer" value=""; />-->
@@ -135,10 +132,29 @@
             </div>
 		</form>  
     </div>
-
+    
+    
+    
+    
     <div class="container-fluid">
-        <div class="row">
-                <div id="writtenC" class="col-sm-6 offset-sm-3 flexible hidden" ></div>
+        <div class="row" style="margin-top: 25px; width: 100%;">
+            <div class="col-sm-10 offset-sm-1 col-12 flexible">
+                <div class="card writearea hidden ">
+                    <div class="card-body ">
+                        <div class="row" >
+                            <div class="col-sm-3 offset-sm-4 col-md-2 offset-md-5 col-6 offset-3">
+                                <button class="btn btn-warning col-sm-3 btn-block closeicon">close</button>
+                            </div>
+                        </div>
+                        <br />
+                        <hr />
+                        <h4 class="card-title">my entries...</h4>
+                        <br />
+                        <hr />
+                        <p class="card-text" id="writtenC"></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -200,7 +216,9 @@
         $(document).ready(function(){
             var id=localStorage.getItem('id');
             var username=localStorage.getItem('username');
-            if(id!==null && username !== null){
+            var permuser=localStorage.getItem('permanentUsername');
+            var permid=localStorage.getItem('permanentId');
+            if(id!==null && username !== null && id === permid && username === permuser){
                 $("#identified").html("Welcome back "+username);
                 console.log(id);
                 console.log(username);
@@ -214,7 +232,7 @@
             $(".reader").click(function(){
                 if($("#read").hasClass("hidden")){
                     $("#read").removeClass("hidden");
-                    $("#writtenC").removeClass("hidden");
+                    //$("#writtenC").removeClass("hidden");
                 }
                 if(!$("#diary").hasClass("hidden")){
                     $("#diary").addClass("hidden");
@@ -227,6 +245,10 @@
                 /*$.post("diaryserver.php", {read:"yes"}, function(data){
                     $("#read").html(data);
                 })  */  
+            });
+            
+            $(".closeicon").click(function(){
+                $(".writearea").addClass("hidden");
             });
             
 
@@ -243,7 +265,7 @@
                 }
                 if($("#offlineread").hasClass("hidden")){
                     $("#offlineread").removeClass("hidden");
-                    $("#writtenC").removeClass("hidden");
+                    //$("#writtenC").removeClass("hidden");
                 }
                 
                /* $.post("diaryserver.php", {read:"yes"}, function(data){
@@ -257,7 +279,7 @@
                 }
                 if($("#diary").hasClass("hidden")){
                     $("#diary").removeClass("hidden");
-                    $("#writtenC").addClass("hidden");
+                    //$("#writtenC").addClass("hidden");
                 }
                 if(!$("#offlineread").hasClass("hidden")){
                     $("#offlineread").addClass("hidden");
@@ -293,8 +315,18 @@
             var readid=event.target.id
             console.log(readid);
             console.log(event);
+            $(".writearea").removeClass("hidden");
             searchItems("entries", readid);
         }
+        
+        function serverreader(event){
+            var readid=event.target.id
+            console.log(readid);
+            console.log(event);
+            $(".writearea").removeClass("hidden");
+            searchItems("onlineEntries", readid);
+        }
+        
          var day=new Date();
             var date=day.toDateString();
             var time=day.toTimeString();
@@ -328,21 +360,58 @@
                 if(res.status!==200){
                     throw "there was an error communicating with the server. please try again later";
                 }
+                ondbClear("onlineSubject", "onlineEntries");
                 return res.json();
                 
             }).then(res=>{
-                console.log(res);
+                res.forEach(value=>{
+                    var onlineSub={
+                        date: value.date,
+                        subject: value.subject
+                    }
+                    //console.log(value);
+                    ondbWriter(onlineSub, value);
+                });
+                //console.log(res);
+                onReader("onlineSubject");
                 
             }).catch(err=>{
                console.log(err); 
             });
         }
+        
+        function formatDate(dayOfWeek, day, month, year) {
+            var daysOfWeek = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+            var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; 
+            return daysOfWeek[dayOfWeek] + " " + months[month] + " " + day + " " + year;
+        }
+        
+        function dategetter(){
+            var today=new Date();
+            var day=today.getUTCDay();
+            var date=today.getUTCDate();
+            var month=today.getUTCMonth();
+            var year=today.getFullYear();
+            
+            return formatDate(day, date, month, year);
+        }
+        function timegetter(){
+            var timer=new Date();
+            var hour=timer.getHours();
+            var minutes=timer.getMinutes();
+            var sec=timer.getSeconds();
+            
+            return hour+":"+minutes+":"+sec;
+            
+        }
          
             
     function validateForm(form){
         var day=new Date();
-        var date=day.toDateString();
-        var time=day.toTimeString();
+        //var date=day.toDateString();
+        var date=dategetter();
+        //var time=day.toTimeString();
+        var time=timegetter();
 
         $("#dated").val(date);
         $("#timed").val(time);
@@ -354,8 +423,6 @@
             subject: $("#mtitle").val(),
             message: $("#noise").val()  
         }
-        
-        
         
         var fail="";
         fail = validateSubject(diaryEntry.subject);
@@ -386,7 +453,7 @@
                     date: $("#dated").val(),
                     time: $("#timed").val(),
                     subject: $("#mtitle").val(),
-                    message: $("#noise").val()  
+                    mywrite: $("#noise").val()  
                 } 
                 dbWriter(subject, entries);
                 //dbWriter("message", mess1);
@@ -416,25 +483,7 @@
 	}else{
 	 	console.log("you are offline");
 	}
-         /* 
-            $(':submit').click(function(){
-                   var data1=$(this).attr("name");
-                 console.log(data1);
-                    var mtitle=$("#mtitle").val();
-                var mysec=$("#noise").val();
-                console.log(mtitle);
-                console.log(mysec);
-                
-                  // $.post("diaryserver.php", {submitW:data, }, function(res){
-                       //$("#writtenC").html(res);
-                   //});
-                  /* var out=$(".title");
-                   for(var i=0;i<out.length;i++){
-                       console.log(out[i]);
-                       console.log(out[i].value);
-                   }
         
-               });*/
             	
 	</script>
     

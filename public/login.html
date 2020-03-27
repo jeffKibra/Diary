@@ -116,7 +116,14 @@
     <script type="text/javascript" src="./scripts/jquery.min.js"></script>
     <script type="text/javascript" src="./scripts/sha1encryption.js"></script>
     <script type="text/javascript" >
+        
         $(document).ready(function(){
+            var id=localStorage.getItem('permanentId');
+            var username=localStorage.getItem('permanentUsername');
+            if(id === null && username === null){
+                window.location.href="/onlinelogin";
+            }
+            
             setInterval(loader, 2000);
         });
         
