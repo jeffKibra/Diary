@@ -1,40 +1,50 @@
-//import * as googleAnalytics from 'workbox-offline-ga.prod.js';
-//googleAnalytics.initialize();
-
 var cacheName = "finiteCreations-v1.06";
-
 
 self.addEventListener("install", event=>{
     self.skipWaiting();
     event.waitUntil(caches.open(cacheName).then(function(cache){
-        cache.addAll(['./scripts/indexedDB.js',
-        './scripts/validator.js',
-        './scripts/widgEditor.js',
-        'workbox-offline-ga.prod.js',
-        './css/actions.css',
-        './css/main.css',
-        './css/widgContent.css',
-        './css/widgEditor.css',
-        'diary.php',
-        'diaryhandler.php',
-        'diaryheader.php',
-        'diaryreader.php',
-        'diaryserver.php',
-        'functions.php',
-        'index.php',
-        'links.php',
-        'links1.php',
-        'login.php',
-        'validator.php',
-        'logout.php',
-        'signup.php'
-                ]);
+        cache.addAll([]);
         console.log("cache populated succesfully");
     }))
 })
 
 self.addEventListener("activate", function (event) {
     self.clients.claim();
+});
+
+self.addEventListener('push', function (event) {
+    var payload = event.data ? JSON.parse(event.data.text()) : 'no payload';
+    var title = 'Finitecreations diary';
+    event.waitUntil(
+        self.registration.showNotification(title, {
+            body: payload.msg,
+            url: payload.url,
+            icon: payload.icon,
+            actions: [
+                { action: 'voteup', title: 'Vote Up' },
+                { action: 'votedown', title: 'Vote Down' }],
+            vibrate: [300, 100, 400]
+        })
+    );
+});
+
+self.addEventListener('notificationclick', function (event) {
+    event.notification.close();
+    event.waitUntil(
+        clients.matchAll({
+            type: "window"
+        })
+        .then(function (clientList) {
+            for (var i = 0; i < clientList.length; i++) {
+                var client = clientList[i];
+                if (client.url == '/' && 'focus' in client)
+                    return client.focus();
+            }
+            if (clients.openWindow) {
+                return clients.openWindow('http://localhost:4001');
+            }
+        })
+    );
 });
 
 
@@ -88,47 +98,4 @@ self.addEventListener('sync', (event) => {
     //delete
     }
 });
-
-function allReader(){
-    var db=null,
-    request=window.indexedDB.open("demo_db", 2);
-    request.onsuccess=function(event){
-        db=event.target.result;
-
-        //add data
-        var customers=[];
-        var transaction=db.transaction(["things"], "readwrite");
-        transaction.oncomplete=function(){
-            console.log("all done!");
-        }
-        transaction.onerror=function(){
-            console.error("an error has occurred: "+transaction.error);
-        }
-        //get the store
-        var store=transaction.objectStore("things");
-        //add data
-        store.openCursor().onsuccess=function(event){
-            var cursor=event.target.result;
-            if(cursor){
-                //console.log(cursor.value);
-                customers.push(cursor.value);
-                cursor.continue();
-            }
-            else{
-                console.log(customers);
-            }
-            return customers;
-        }    
-    }
-        
-    request.onerror=function(){
-        console.error("an error has occurred: ");
-    }    
-}
-
-
-
-
-
-
 

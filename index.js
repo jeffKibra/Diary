@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const mysql = require("mysql");
 const sha1 = require("sha1");
+const webpush = require("web-push");
 //import validator script
 const {validateSignup, validateLogin, validateEntry}=require("./mymodules/validator");
 
@@ -15,7 +16,6 @@ const pool=mysql.createPool({
     queueLimit: 0
 });
 
-
 /*const pool=mysql.createPool({
     host: 'localhost',
     user: 'finitecr_jeffkibra',
@@ -26,20 +26,20 @@ const pool=mysql.createPool({
     queueLimit: 0
 });*/
 
-/*var connection=mysql.createConnection({
-    host: 'finitecreations.co.ke',
-    user: 'finitecr_jeffkibra',
-    password: 'king.kin@keen',
-    database: 'finitecr_contacted',
-});
-
-connection.connect(err=>{
-    if(err) throw err;
-});*/
-
 const app=express();
 
-const PORT = process.env.PORT || 5000;
+//generate only once
+//const vapidKeys=webpush.generateVAPIDKeys();
+//console.log(vapidKeys);
+
+//webpush.setGCMAPIKey('BKGDX3Lyyzy2JNa1GwCv2EAPhrKqAlZ2380AXZWiFPfBQUwUpZG9AYDtrGzZwcal6gw82NX5pOe7kntsu-4Cjdo');
+webpush.setVapidDetails(
+    'mailto:solutions@finitecreations.co.ke',
+    'BLdo0yM-vR1PGOQSShGNuZtg2VAbFWWjfQuuGzOuvMuePxusEcoDQ8DQMAyZuSobRFkQIOLXvq7rcBTuCPpYCzA',
+    '97lNijPEGIsejFlcWdkP87FnJTXVoG2EPx5V2Nmskh8'
+);
+
+const PORT = process.env.PORT || 5004 ;
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());//handle json data
@@ -63,6 +63,29 @@ app.post("/onlineread", (req, res)=>{
     });
     //var data=JSON.stringify(dat);
     //res.send(data);
+});
+
+app.post('/register', function (req, res) {//web push registration
+    var endpoint = req.body.endpoint;
+    console.log("subscription");
+    //saveRegistrationDetails(endpoint, key, authSecret);
+    const pushSubscription = {
+        endpoint: req.body.endpoint,
+        keys: {
+            auth: req.body.authSecret,
+            p256dh: req.body.key
+        }
+    };
+    console.log(pushSubscription);
+    var body = 'Thank you for registering';
+    var iconUrl = './public/favicon/android-icon-36x36.png';
+    webpush.sendNotification(pushSubscription, JSON.stringify({
+        msg: body,
+        url: `http://localhost:${PORT}/`,
+        icon: iconUrl
+    }))
+        .then(result => res.sendStatus(201))
+        .catch(err => { console.log(err); });
 });
 
 app.get("/webversion", (req, res)=>{
@@ -126,7 +149,7 @@ app.post("/userlogin", (req, res)=>{
     
     pool.query(loginsql, [logedin.username, logedin.password], (err, results)=>{
        if(err) throw err;
-        console.log(results);
+        //console.log(results);
         if(results.length>0){
             var resid={
                 id: results[0].id,
@@ -134,7 +157,7 @@ app.post("/userlogin", (req, res)=>{
                 password: results[0].password
             };
             
-            console.log(resid);
+            //console.log(resid);
             
             res.send(resid);
         }
@@ -143,7 +166,7 @@ app.post("/userlogin", (req, res)=>{
             resid={
                 value: "no"
             };
-            console.log("invalid username or password");
+            //console.log("invalid username or password");
             res.send(resid);
         }
             

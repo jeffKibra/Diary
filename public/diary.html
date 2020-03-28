@@ -210,9 +210,75 @@
 	<script type="text/javascript" src="./scripts/jquery.min.js"></script>    
     <script type="text/javascript" src="./scripts/validator.js"></script>
     <script type="text/javascript" src="./scripts/indexedDB.js"></script>
+    <script type="text/javascript" src="./scripts/webpush.js"></script>
     <script type="text/javascript" src="./scripts/sha1encryption.js"></script>
     
 	<script type="text/javascript">
+        
+        
+        (function(){
+            if('serviceWorker' in navigator){
+                navigator.serviceWorker.register("sw.js").then(initialiseState);
+		    }else{
+		 	    console.log("serviceWorker not supported");
+            }
+        })();
+
+       /* if('serviceWorker' in navigator){
+		 	navigator.serviceWorker.register("sw.js").then(reg=>{
+		 		console.log("serviceWorker registration successful with scope: ", reg.scope);
+		 	}).catch(err=>{
+		 		console.log("serviceWorker registration failed with reason: ", err);
+		 	});
+		}else{
+		 	console.log("serviceWorker not supported");
+        }*/
+        
+       /*if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(reg=>navigator.serviceWorker.ready).then(registration => {
+                console.log("serviceWorker registration successful with scope: ", registration.scope);
+                console.log(registration);
+                registration.pushManager.getSubscription().then(subscription => {
+                    if (subscription) {
+                        console.log("already subscribed");
+                        return;
+                    }
+                    console.log("registering");
+                    var options={
+                        userVisibleOnly: true, 
+                        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+                    };
+                    return registration.pushManager.subscribe(options).then(subscription => {
+                        console.log("subscribed1");
+                        var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
+                        console.log("subscribed2");
+                        key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
+                        console.log("subscribed2");
+                        var rawAuthSecret = subscription.getKey ?  subscription.getKey('auth') : '';
+                        console.log("subscribed3");
+                        authSecret = rawAuthSecret ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
+                        console.log("subscribed4");
+                        endpoint = subscription.endpoint;
+                        console.log("subscribed");
+
+                        return fetch('./register', {
+                            method: 'post',
+                            headers: new Headers({'content-type': 'application/json'}),
+                            body: JSON.stringify({
+                                endpoint: subscription.endpoint,
+                                key: key,
+                                authSecret: authSecret,
+                            }),
+                        }).then(res=>{
+                            console.log(res);
+                        });
+                    });
+                })
+            }).catch(function(err) {// registration failed :(
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        } */
+        
         $(document).ready(function(){
             var id=localStorage.getItem('id');
             var username=localStorage.getItem('username');
