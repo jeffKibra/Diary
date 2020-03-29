@@ -38,6 +38,110 @@
 		
 		}
 
+        function onlineSaver(){
+            var db=null,
+                request=window.indexedDB.open("fcrDiary", 2);
+            request.onsuccess=function(event){
+                db=event.target.result;
+                //select a store in a transaction
+                var transaction=db.transaction("entries");
+                transaction.oncomplete=function(){
+                    console.log("transaction complete");
+                }
+                transaction.onerror=function(){
+                    console.log("an error occured", transaction.onerror);
+                }
+                //get the store for using
+                var store = transaction.objectStore("entries");
+                //read data
+                var customers=[];
+				store.openCursor().onsuccess=function(event){
+					var cursor=event.target.result;
+					if(cursor){
+						//var value=cursor.value;
+						customers.push(cursor.value);
+						cursor.continue();
+					}
+					else{
+                        console.log(customers);
+                        customers.forEach(value=>{
+                            console.log(value);
+                            fetch("/diaryinput", {
+                                method: 'POST',
+                                headers: new Headers({'content-type': "application/json"}),
+                                body: JSON.stringify(value)
+                            }).then(res=>{
+                                if(res.status!==200){
+                                    throw "error from the server";
+                                }
+                                return res.json();
+                            }).then(response=>{
+                                console.log(response.value);
+                                if(response.value=="yes"){
+                                   console.log(response.value); document.getElementById("displayMessage").innerHTML="entries successfully saved in the server";
+                                    deleteValues("entries", cursor.value.time);
+                                }else{
+                                    document.getElementById("displayError").innerHTML="Entries not saved. please try again later";
+                                }
+                            }).catch(err=>{
+                                console.log(err);
+                                document.getElementById("displayError").innerHTML="Entries not saved. please try again later";
+                
+                            });
+                        });
+                        
+						console.log(customers);
+                    }
+				}
+            }
+            request.onerror=function(){
+				console.error("an error has occurred: ");
+			}
+		
+        }
+    
+        function deleteValues(mystore, value) {
+            var db=null,
+			request=window.indexedDB.open("fcrDiary", 2);
+			request.onsuccess=function(event){
+				db=event.target.result;
+
+				//select the store for reading
+				var transaction=db.transaction([mystore], 'readwrite');
+				transaction.oncomplete=function(){
+					console.log("all done!");
+				}
+				transaction.onerror=function(){
+					console.error("an error has occurred: "+transaction.error);
+				}
+				//get the store
+				var store=transaction.objectStore(mystore);
+                var index=store.index('time');
+				//retrieve data
+				
+                var searchValue=IDBKeyRange.only(value);
+                index.openCursor(searchValue).onsuccess=function(event){
+                    var cursor=event.target.result;
+                    if(cursor){
+                        var deleteRequest=cursor.delete();
+                        console.log("value deleted");
+                        /*if(cursor.value.subject==value){
+                        customers.push(cursor.value);
+                        }*/
+                        cursor.continue();
+                    }else{
+                        console.log("done111");
+                
+                    }
+                }
+				
+			}
+		
+			request.onerror=function(){
+				console.error("an error has occurred: ");
+			}
+        }
+
 		function createTable(data, id){
 			console.log(data);
             document.getElementById(id).innerHTML="";
@@ -338,12 +442,14 @@
                     
 					entriesStore.createIndex("subject", "subject", {unique:false});
                     entriesStore.createIndex("date", "date", {unique:false});
+                    entriesStore.createIndex("time", "time", {unique:true});
                     
                     onlinesubject.createIndex("date", "date", {unique: false});
                     onlinesubject.createIndex("subject", "subject", {unique: false});
                     
                     onlineentry.createIndex("date", "date", {unique: false});
                     onlineentry.createIndex("subject", "subject", {unique: false});
+                    onlineentry.createIndex("time", "time", {unique: true});
                     
                     //entriesStore.createIndex("by_email", "email");
 					//store2.createIndex("by_name", "name");

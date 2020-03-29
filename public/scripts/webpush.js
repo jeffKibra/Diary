@@ -17,7 +17,7 @@
 
         var options={
             userVisibleOnly: true, 
-            applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+            //applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
         };
 
         function initialiseState(){
@@ -37,8 +37,19 @@
                 console.warn("push notifications not supported");
                 return;
             }
+            //check for sync manager
+            if(!('SyncManager' in window)){
+                console.warn("background syncronization not supported");
+            }
+            
             console.log("initializing...");
+            webPushHandler();
 
+            
+        }
+
+        //webpush handler
+        function webPushHandler(){
             navigator.serviceWorker.ready.then(function(serviceWorkerRegistration){
                 console.log(serviceWorkerRegistration);
                 //get the push notification subscription object
@@ -58,6 +69,16 @@
                     console.warn(`error during getSubscription()`, err);
                 });
             });
+        }
+
+        //background sync
+        function synchronization(){
+            navigator.serviceWorker.ready.then(registration=>{
+                console.log("background sync readination");
+                //register
+                var time
+                registration.sync.register()
+            })
         }
 
         function subscribe(){

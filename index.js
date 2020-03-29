@@ -2,17 +2,19 @@ const path = require("path");
 const express = require("express");
 const mysql = require("mysql");
 const sha1 = require("sha1");
-const webpush = require("web-push");
+//const webpush = require("web-push");
 //import validator script
 const {validateSignup, validateLogin, validateEntry}=require("./mymodules/validator");
 
 const pool=mysql.createPool({
+    //host: 'finitecreations.co.ke',
+     
     host: '69.16.239.18',
     user: 'finitecr_jeffkibra',
     password: 'king.kin@keen',
     database: 'finitecr_contacted',
     waitForConnections: true,
-    connectionLimit: 100,
+    connectionLimit: 300,
     queueLimit: 0
 });
 
@@ -25,6 +27,13 @@ const pool=mysql.createPool({
     connectionLimit: 100,
     queueLimit: 0
 });*/
+/*const connection=mysql.createConnection({
+    host: '69.16.239.18',
+    user: 'finitecr_jeffkibra',
+    password: 'king.kin@keen',
+    database: 'finitecr_contacted',
+});*/
+
 
 const app=express();
 
@@ -32,14 +41,15 @@ const app=express();
 //const vapidKeys=webpush.generateVAPIDKeys();
 //console.log(vapidKeys);
 
-//webpush.setGCMAPIKey('BKGDX3Lyyzy2JNa1GwCv2EAPhrKqAlZ2380AXZWiFPfBQUwUpZG9AYDtrGzZwcal6gw82NX5pOe7kntsu-4Cjdo');
+/*webpush.setGCMAPIKey('109628012376');
+
 webpush.setVapidDetails(
     'mailto:solutions@finitecreations.co.ke',
     'BLdo0yM-vR1PGOQSShGNuZtg2VAbFWWjfQuuGzOuvMuePxusEcoDQ8DQMAyZuSobRFkQIOLXvq7rcBTuCPpYCzA',
     '97lNijPEGIsejFlcWdkP87FnJTXVoG2EPx5V2Nmskh8'
-);
+);*/
 
-const PORT = process.env.PORT || 5004 ;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());//handle json data
@@ -65,10 +75,10 @@ app.post("/onlineread", (req, res)=>{
     //res.send(data);
 });
 
-app.post('/register', function (req, res) {//web push registration
+/*app.post('/register', function (req, res) {//web push registration
     var endpoint = req.body.endpoint;
     console.log("subscription");
-    //saveRegistrationDetails(endpoint, key, authSecret);
+   
     const pushSubscription = {
         endpoint: req.body.endpoint,
         keys: {
@@ -76,6 +86,8 @@ app.post('/register', function (req, res) {//web push registration
             p256dh: req.body.key
         }
     };
+    
+     saveRegistrationDetails(pushSubscription);
     console.log(pushSubscription);
     var body = 'Thank you for registering';
     var iconUrl = './public/favicon/android-icon-36x36.png';
@@ -86,7 +98,16 @@ app.post('/register', function (req, res) {//web push registration
     }))
         .then(result => res.sendStatus(201))
         .catch(err => { console.log(err); });
-});
+});*/
+
+function saveRegistrationDetails(pushSubscription){
+    var query= "INSERT INTO subscribed(endpoint, auth, p256dh) values(?,?,?)"
+    
+    pool.query(query, [pushSubscription.endpoint, pushSubscription.keys.auth, pushSubscriptio.keys.p256dh ], (err, results)=>{
+       if(err) throw err;
+        console.log(results);
+    });
+}
 
 app.get("/webversion", (req, res)=>{
     res.redirect("https://finitecreations.co.ke/diary");
@@ -112,7 +133,7 @@ app.get("/signup", (req, res)=>{
     res.sendFile(path.join(__dirname, 'public', 'signup.html'));
 });
 
-app.get("/checkusername/:username", (req, res)=>{
+/*app.get("/checkusername/:username", (req, res)=>{
     var username=req.params.username;
     var testsql="SELECT * FROM diaryid WHERE username = ?";
     pool.getConnection((err, connection)=>{
@@ -130,9 +151,9 @@ app.get("/checkusername/:username", (req, res)=>{
         if(result.length<=0) {res.send("yes");}
         console.log(result.length);
         res.send("no");
-    });*/
+    });
     
-});
+});*/
 
 app.post("/userlogin", (req, res)=>{
     var enct1="ki!*^90";
@@ -141,14 +162,17 @@ app.post("/userlogin", (req, res)=>{
         username: req.body.username,
         password: sha1(enct1+req.body.password+enct2)
     };
+    console.log(logedin);
     var validated=validateLogin(logedin);
     if(validated!==""){
         res.send(validated);
     }
-    var loginsql="SELECT * FROM diaryid WHERE username = ? AND password = ?";
-    
-    pool.query(loginsql, [logedin.username, logedin.password], (err, results)=>{
+    console.log("making the query");
+    var loginsql="SELECT * FROM diaryid WHERE username = jkibera";
+    //[logedin.username, logedin.password]
+    pool.query(loginsql, (err, results)=>{
        if(err) throw err;
+        console.log("making the query2");
         //console.log(results);
         if(results.length>0){
             var resid={
@@ -195,19 +219,19 @@ app.post("/diaryinput", (req, res)=>{
        if(err) throw err;
         console.log(results);
         
-        /*if(results.length<=0){
+        if(results.length<=0){
             resid={
                 value: "no"
             };
             console.log("invalid username or password");
-            
-        }*/
-            
-        
-        //res.send(JSON.stringify(resid));
-    
+           
+        }else{
+            resid={
+                value: "yes"
+            };   
+        }
+        res.send(JSON.stringify(resid));
     });
-    res.send("added successfully");
     
 });
 

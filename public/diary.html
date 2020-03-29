@@ -92,6 +92,7 @@
         </div>
         <div class="col-sm-2 flexible">
             <p class="dated"></p>
+            
         </div>
         <div class="col-sm-2 flexible">
             <button id="write" class="write btn btn-primary btn-block">Write..</button>
@@ -177,7 +178,7 @@
     </div>
 
     <div id="offlineread" class="flexible hidden offsetted">
-        <a href="/ofllinesave" id="offlinesave" class="btn btn-primary">Save all...</a>
+        <a href="#" id="offlinesave" class="btn btn-primary col-sm-3 mx-auto col-6">Save all...</a>
         <div class="table-responsive">
 			<table class="table table-condensed">
 				<thead>
@@ -294,6 +295,11 @@
                 window.location.href="/login";
             }
             //setTimeout(loader, 2000);
+            
+            $("#offlinesave").click(e=>{
+                e.preventDefault();
+               onlineSaver(); 
+            });
             
             $(".reader").click(function(){
                 if($("#read").hasClass("hidden")){
@@ -506,22 +512,22 @@
                 }
                 console.log(response.status);
                 //displayMessage("message sent...");
-                return response.text();
+                return response.json();
             }).then(response=>{
-                displayMessage(response);
+                console.log()
+               if(response.value=="yes"){
+                   $("#displayMessage").val("entries saved successfully");
+               }else{
+                   $("#displayError").val("entries have not been saved");
+               }
                 returning();
             }).catch(err=>{
                 var subject={
                     date:$("#dated").val(),
                     subject:$("#mtitle").val(),
                 }
-                var entries={
-                    date: $("#dated").val(),
-                    time: $("#timed").val(),
-                    subject: $("#mtitle").val(),
-                    mywrite: $("#noise").val()  
-                } 
-                dbWriter(subject, entries);
+                
+                dbWriter(subject, diaryEntry);
                 //dbWriter("message", mess1);
                 console.log(err);
                 displayMessage("data has been saved locally. \n Ensure you send to the server to ensure permanent storage");

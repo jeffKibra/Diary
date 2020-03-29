@@ -1,3 +1,8 @@
+importScripts('https://storage.goggleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
+
+import * as googleAnalytics from 'workbox-google-analytics';
+googleAnalytics.initialize();
+
 var cacheName = "finiteCreations-v1.06";
 
 self.addEventListener("install", event=>{
