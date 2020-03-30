@@ -439,13 +439,14 @@
             }).then(res=>{
                 res.forEach(value=>{
                     var onlineSub={
-                        date: value.date,
+                        dated: value.dated,
+                        timed: value.timed,
                         subject: value.subject
                     }
                     //console.log(value);
                     ondbWriter(onlineSub, value);
                 });
-                //console.log(res);
+                console.log(res);
                 onReader("onlineSubject");
                 
             }).catch(err=>{
@@ -491,15 +492,15 @@
         
         var diaryEntry={
             id: localStorage.getItem('id'),
-            date: $("#dated").val(),
-            time: $("#timed").val(),
+            dated: $("#dated").val(),
+            timed: $("#timed").val(),
             subject: $("#mtitle").val(),
-            message: $("#noise").val()  
+            mywrite: $("#noise").val()  
         }
         
         var fail="";
         fail = validateSubject(diaryEntry.subject);
-        fail += validateMessage(diaryEntry.message);
+        fail += validateMessage(diaryEntry.mywrite);
         //fail += validateSurname(form.subject.value);
 
         if(fail==""){
@@ -524,8 +525,9 @@
                 returning();
             }).catch(err=>{
                 var subject={
-                    date:$("#dated").val(),
-                    subject:$("#mtitle").val(),
+                    dated: $("#dated").val(),
+                    timed: $("#timed").val(),
+                    subject: $("#mtitle").val(),
                 }
                 
                 dbWriter(subject, diaryEntry);

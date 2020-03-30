@@ -58,28 +58,28 @@
 				store.openCursor().onsuccess=function(event){
 					var cursor=event.target.result;
 					if(cursor){
-						//var value=cursor.value;
+						//var cursorValue=cursor.value;
 						customers.push(cursor.value);
 						cursor.continue();
-					}
-					else{
+					}else{
                         console.log(customers);
-                        customers.forEach(value=>{
-                            console.log(value);
+                        customers.forEach(arrayValue=>{
+                            console.log(arrayValue);
                             fetch("http://localhost/public/api.php", {
                                 method: 'POST',
                                 headers: new Headers({'content-type': "application/json"}),
-                                body: JSON.stringify(value)
+                                body: JSON.stringify(arrayValue)
                             }).then(res=>{
                                 if(res.status!==200){
                                     throw "error from the server";
                                 }
                                 return res.json();
                             }).then(response=>{
-                                console.log(response.value);
+                                //console.log(response.value);
+                                console.log(response);
                                 if(response.value=="yes"){
                                    console.log(response.value); document.getElementById("displayMessage").innerHTML="entries successfully saved in the server";
-                                    deleteValues("entries", cursor.value.time);
+                                    deleteValues(arrayValue.timed);
                                 }else{
                                     document.getElementById("displayError").innerHTML="Entries not saved. please try again later";
                                 }
@@ -100,14 +100,14 @@
 		
         }
     
-        function deleteValues(mystore, value) {
+        function deleteValues(value) {//takes in values of index to be searched
             var db=null,
 			request=window.indexedDB.open("fcrDiary", 2);
 			request.onsuccess=function(event){
 				db=event.target.result;
 
 				//select the store for reading
-				var transaction=db.transaction([mystore], 'readwrite');
+				var transaction=db.transaction(["entries", "subject"], 'readwrite');
 				transaction.oncomplete=function(){
 					console.log("all done!");
 				}
@@ -115,25 +115,45 @@
 					console.error("an error has occurred: "+transaction.error);
 				}
 				//get the store
-				var store=transaction.objectStore(mystore);
-                var index=store.index('time');
+				var subjectstore=transaction.objectStore("subject");
+                var entrystore=transaction.objectStore("entries");
+                
+                var subjectindex=subjectstore.index('timed');
+                var entryindex=entrystore.index('timed');
 				//retrieve data
 				
                 var searchValue=IDBKeyRange.only(value);
-                index.openCursor(searchValue).onsuccess=function(event){
-                    var cursor=event.target.result;
-                    if(cursor){
-                        var deleteRequest=cursor.delete();
+                //delete from the subject store
+                subjectindex.openCursor(searchValue).onsuccess=function(event){
+                    var subjectcursor=event.target.result;
+                    if(subjectcursor){
+                        var deleteRequest=subjectcursor.delete();
                         console.log("value deleted");
                         /*if(cursor.value.subject==value){
                         customers.push(cursor.value);
                         }*/
-                        cursor.continue();
+                        subjectcursor.continue();
                     }else{
                         console.log("done111");
                 
                     }
                 }
+                //delete from the entries store
+                entryindex.openCursor(searchValue).onsuccess=function(event){
+                    var entrycursor=event.target.result;
+                    if(entrycursor){
+                        var deleteRequest=entrycursor.delete();
+                        console.log("value deleted");
+                        /*if(cursor.value.subject==value){
+                        customers.push(cursor.value);
+                        }*/
+                        entrycursor.continue();
+                    }else{
+                        console.log("done111");
+                
+                    }
+                }
+                
 				
 			}
 		
@@ -158,7 +178,7 @@
 				var bdata=document.createElement("td");
 				var btn=document.createElement("button");
 				btn.setAttribute("class", "btn btn-primary readoff");
-				btn.setAttribute("id", data[i].subject);
+				btn.setAttribute("id", data[i].timed);
 				
 				btn.innerHTML="read";
 				bdata.appendChild(btn);
@@ -275,7 +295,7 @@
 				var bdata=document.createElement("td");
 				var btn=document.createElement("button");
 				btn.setAttribute("class", "btn btn-primary readoff");
-				btn.setAttribute("id", data[i].subject);
+				btn.setAttribute("id", data[i].timed);
 				
 				btn.innerHTML="read";
 				bdata.appendChild(btn);
@@ -437,19 +457,20 @@
 					var entriesStore=request.transaction.objectStore("entries");
                     var onlinesubject=request.transaction.objectStore("onlineSubject");
                     var onlineentry=request.transaction.objectStore("onlineEntries");
-					subjectStore.createIndex("date", "date", {unique:false});
+					subjectStore.createIndex("dated", "dated", {unique:false});
+                    subjectStore.createIndex("timed", "timed", {unique:true});
                     subjectStore.createIndex("subject", "subject", {unique:false});
                     
 					entriesStore.createIndex("subject", "subject", {unique:false});
-                    entriesStore.createIndex("date", "date", {unique:false});
-                    entriesStore.createIndex("time", "time", {unique:true});
+                    entriesStore.createIndex("dated", "dated", {unique:false});
+                    entriesStore.createIndex("timed", "timed", {unique:true});
                     
-                    onlinesubject.createIndex("date", "date", {unique: false});
+                    onlinesubject.createIndex("dated", "dated", {unique: false});
                     onlinesubject.createIndex("subject", "subject", {unique: false});
                     
-                    onlineentry.createIndex("date", "date", {unique: false});
+                    onlineentry.createIndex("dated", "dated", {unique: false});
                     onlineentry.createIndex("subject", "subject", {unique: false});
-                    onlineentry.createIndex("time", "time", {unique: true});
+                    onlineentry.createIndex("timed", "timed", {unique: true});
                     
                     //entriesStore.createIndex("by_email", "email");
 					//store2.createIndex("by_name", "name");
@@ -572,7 +593,7 @@ function searchItems(mystore, value){//reads value at a time
     
 	   //get the store
 	   var store=transaction.objectStore(mystore);
-        var index=store.index('subject');
+        var index=store.index('timed');
         document.getElementById("writtenC").innerHTML="";
             
         //using indes to read
@@ -589,7 +610,7 @@ function searchItems(mystore, value){//reads value at a time
             }else{
                 //createTable(customers);
                 customers.forEach(value=>{
-                    ccontent="<h4>"+value.subject+"</h4><br/><small>"+value.date+ ":" + value.time+"</small><br/>"+value.mywrite+"<br />";
+                    ccontent="<h4>"+value.subject+"</h4><br/><small>"+value.dated+ ":" + value.timed+"</small><br/>"+value.mywrite+"<br />";
                     document.getElementById("writtenC").innerHTML+=ccontent; 
                 });
 		      console.log(customers);
