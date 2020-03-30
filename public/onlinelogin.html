@@ -130,16 +130,18 @@
         function logedin(form){
             var logindata={
                 username: form.username.value,
-                password: form.password.value
+                password: form.password.value,
+                submit: form.login.value
             }
+            console.log(logindata);
         
             var fail="";
             fail = validateUsername(form.username.value);
             fail += validatePassword(form.password.value);
             //fail += validateSurname(form.subject.value);
 
-            if(fail==""){
-                fetch("/userlogin", {
+            if(fail==""){///userlogin
+                fetch("http://localhost/public/api.php", {
 				    method:'POST',
 					headers:new Headers({'content-type':'application/json'}),
 					body:JSON.stringify(logindata)

@@ -66,7 +66,7 @@
                         console.log(customers);
                         customers.forEach(value=>{
                             console.log(value);
-                            fetch("/diaryinput", {
+                            fetch("http://localhost/public/api.php", {
                                 method: 'POST',
                                 headers: new Headers({'content-type': "application/json"}),
                                 body: JSON.stringify(value)
