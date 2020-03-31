@@ -1,7 +1,7 @@
-importScripts('https://storage.goggleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
+importScripts('./package/build/importScripts/sw-offline-google-analytics.prod.v0.0.25.js');
+importScripts('./scripts/indexedDB.js');
 
-import * as googleAnalytics from 'workbox-google-analytics';
-googleAnalytics.initialize();
+goog.offlineGoogleAnalytics.initialize();
 
 var cacheName = "finiteCreations-v1.06";
 
@@ -88,19 +88,75 @@ self.addEventListener('fetch', event=>{
     }));
 });
 
+
 self.addEventListener('sync', (event) => {
-    if (event.tag === 'contacts') {
-        event.waitUntil(
-        allReader().then(value =>{
-            console.log(value);
-            return fetch('/sendMessage', {
-                method: 'POST',
-                headers: new Headers({ 'content-type': 'application/json' }),
-                body: JSON.stringify(value)
-                })
-            }
-        ));
-    //delete
-    }
+    syncReader("entries", event);
+    
 });
+
+
+        function syncReader(mystore, event){//recieves name of the store
+			var db=null,
+			request=window.indexedDB.open("fcrDiary", 2);
+			request.onsuccess=function(event){
+				db=event.target.result;
+
+				//select the store for reading
+				var transaction=db.transaction([mystore]);
+				transaction.oncomplete=function(){
+					console.log("all done!");
+				}
+				transaction.onerror=function(){
+					console.error("an error has occurred: "+transaction.error);
+				}
+				//get the store
+				var store=transaction.objectStore(mystore);
+				//retrieve data
+				var customers=[];
+				store.openCursor().onsuccess=function(event){
+					var cursor=event.target.result;
+					if(cursor){
+						//console.log(cursor.value);
+						customers.push(cursor.value);
+						cursor.continue();
+					}
+					else{
+						console.log(customers);
+                        synchronized(customers, event);           
+					}
+				}
+            }
+			request.onerror=function(){
+				console.error("an error has occurred: ");
+			}
+		}
+
+function synchronized(myarray, event){
+    myarray.forEach(arrayvalue=>{
+        if (event.tag === arrayvalue.timed) {
+            event.waitUntil(
+                console.log(arrayvalue);
+                fetch("http://localhost/public/api.php", {
+                    method: 'POST',
+                    headers: new Headers({'content-type': "application/json"}),
+                    body: JSON.stringify(arrayValue)
+                })
+            )
+            deleteValues(myarray.timed);
+        }
+    //delete
+    });
+    
+}
+
+
+
+
+
+
+
+
+
+
+
 

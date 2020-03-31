@@ -224,6 +224,8 @@
 		 	    console.log("serviceWorker not supported");
             }
         })();
+        
+        
 
        /* if('serviceWorker' in navigator){
 		 	navigator.serviceWorker.register("sw.js").then(reg=>{
@@ -524,13 +526,22 @@
                }
                 returning();
             }).catch(err=>{
+                console.log("background sync readination");
                 var subject={
                     dated: $("#dated").val(),
                     timed: $("#timed").val(),
                     subject: $("#mtitle").val(),
                 }
+                navigator.serviceWorker.ready.then(registration=>{
+                    console.log(registration);
+                    
+                    //register
                 
-                dbWriter(subject, diaryEntry);
+                    registration.sync.register(subject.timed).then(()=>{
+                        dbWriter(subject, diaryEntry);
+                    });
+                });
+                
                 //dbWriter("message", mess1);
                 console.log(err);
                 displayMessage("data has been saved locally. \n Ensure you send to the server to ensure permanent storage");
