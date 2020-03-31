@@ -136,13 +136,18 @@ function synchronized(myarray, event){
     myarray.forEach(arrayvalue=>{
         if (event.tag === arrayvalue.timed) {
             event.waitUntil(
-                console.log(arrayvalue);
                 fetch("https://finitecreations.co.ke/api/", {
                     method: 'POST',
                     headers: new Headers({'content-type': "application/json"}),
                     body: JSON.stringify(arrayValue)
-                })
-            )
+                }).then(res=>{
+                    console.log(arrayvalue);
+                    return res.json();
+                }).then(res=>{
+                    console.log(res);
+                }).catch(err=>{
+                    console.log("error from the server");
+                }))
             deleteValues(myarray.timed);
         }
     //delete
