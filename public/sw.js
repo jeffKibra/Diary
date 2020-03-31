@@ -90,6 +90,7 @@ self.addEventListener('fetch', event=>{
 
 
 self.addEventListener('sync', (event) => {
+    console.log("background sync hapening");
     syncReader("entries", event);
     
 });
