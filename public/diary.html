@@ -329,8 +329,7 @@
             $(".offlinereader").click(function(event){
                 console.log(event);
                 //store for offline is subject
-                var dataread=allReader("subject");
-                console.log(dataread);
+                allReader("subject");
                 if(!$("#read").hasClass("hidden")){
                     $("#read").addClass("hidden");
                 }
@@ -532,7 +531,9 @@
                     timed: $("#timed").val(),
                     subject: $("#mtitle").val(),
                 }
-                if('SyncManager' in window){
+                if(!('SyncManager' in window)){
+                    dbWriter(subject, diaryEntry);
+                }else{
                     navigator.serviceWorker.ready.then(registration=>{
                         console.log(registration);
                     
@@ -542,9 +543,8 @@
                             dbWriter(subject, diaryEntry);
                         });
                     });
-                }else{
-                    dbWriter(subject, diaryEntry);
                 }
+                
                 
                 //dbWriter("message", mess1);
                 console.log(err);

@@ -109,10 +109,10 @@
 				//select the store for reading
 				var transaction=db.transaction(["entries", "subject"], 'readwrite');
 				transaction.oncomplete=function(){
-					console.log("all done!");
+					console.log("deletion all done!");
 				}
 				transaction.onerror=function(){
-					console.error("an error has occurred: "+transaction.error);
+					console.error("an error has occurred when deleting: "+transaction.error);
 				}
 				//get the store
 				var subjectstore=transaction.objectStore("subject");

@@ -1,5 +1,5 @@
 importScripts('./package/build/importScripts/sw-offline-google-analytics.prod.v0.0.25.js');
-importScripts('./scripts/indexedDB.js');
+//importScripts('./scripts/indexedDB.js');
 
 goog.offlineGoogleAnalytics.initialize();
 
@@ -89,16 +89,17 @@ self.addEventListener('fetch', event=>{
 });
 
 
-self.addEventListener('sync', (event) => {
+self.addEventListener('sync', (syncEvent) => {
     console.log("background sync hapening");
-    syncReader("entries", event);
+    console.log(syncEvent);
+    syncReader("entries", syncEvent);
     
 });
 
 
-        function syncReader(mystore, event){//recieves name of the store
+        function syncReader(mystore, syncEvent){//recieves name of the store
 			var db=null,
-			request=window.indexedDB.open("fcrDiary", 3);
+			request=indexedDB.open("fcrDiary", 3);
 			request.onsuccess=function(event){
 				db=event.target.result;
 
@@ -123,7 +124,7 @@ self.addEventListener('sync', (event) => {
 					}
 					else{
 						console.log(customers);
-                        synchronized(customers, event);           
+                        synchronized(customers, syncEvent);           
 					}
 				}
             }
@@ -132,30 +133,88 @@ self.addEventListener('sync', (event) => {
 			}
 		}
 
-function synchronized(myarray, event){
+function synchronized(myarray, syncEvent){
+    console.log(syncEvent);
+    console.log("synchronization");
     myarray.forEach(arrayvalue=>{
-        if (event.tag === arrayvalue.timed) {
-            event.waitUntil(
-                fetch("https://finitecreations.co.ke/api/", {
+        console.log(arrayvalue.timed);
+        if (syncEvent.tag === arrayvalue.timed) {
+            console.log("sync value found");
+                fetch("https://finitecreations.co.ke/api/index.php", {
                     method: 'POST',
                     headers: new Headers({'content-type': "application/json"}),
-                    body: JSON.stringify(arrayValue)
-                }).then(res=>{
-                    console.log(arrayvalue);
-                    return res.json();
-                }).then(res=>{
-                    console.log(res);
-                }).catch(err=>{
-                    console.log("error from the server");
-                }))
-            deleteValues(myarray.timed);
+                    body: JSON.stringify(arrayvalue)
+                });
+            console.log("background sync done");
+            //deleteValues(arrayvalue.timed);
+            deleteValues(arrayvalue.timed);
         }
     //delete
     });
     
 }
 
+function deleteValues(value) {//takes in values of index to be searched
+            var db=null,
+			request=indexedDB.open("fcrDiary", 3);
+			request.onsuccess=function(event){
+				db=event.target.result;
 
+				//select the store for reading
+				var transaction=db.transaction(["entries", "subject"], 'readwrite');
+				transaction.oncomplete=function(){
+					console.log("deletion all done!");
+				}
+				transaction.onerror=function(){
+					console.error("an error has occurred during deletion: "+transaction.error);
+				}
+				//get the store
+				var subjectstore=transaction.objectStore("subject");
+                var entrystore=transaction.objectStore("entries");
+                
+                var subjectindex=subjectstore.index('timed');
+                var entryindex=entrystore.index('timed');
+				//retrieve data
+				
+                var searchValue=IDBKeyRange.only(value);
+                //delete from the subject store
+                subjectindex.openCursor(searchValue).onsuccess=function(event){
+                    var subjectcursor=event.target.result;
+                    if(subjectcursor){
+                        var deleteRequest=subjectcursor.delete();
+                        console.log("value deleted");
+                        /*if(cursor.value.subject==value){
+                        customers.push(cursor.value);
+                        }*/
+                        subjectcursor.continue();
+                    }else{
+                        console.log("done111");
+                
+                    }
+                }
+                //delete from the entries store
+                entryindex.openCursor(searchValue).onsuccess=function(event){
+                    var entrycursor=event.target.result;
+                    if(entrycursor){
+                        var deleteRequest=entrycursor.delete();
+                        console.log("value deleted");
+                        /*if(cursor.value.subject==value){
+                        customers.push(cursor.value);
+                        }*/
+                        entrycursor.continue();
+                    }else{
+                        console.log("done111");
+                
+                    }
+                }
+                
+				
+			}
+		
+			request.onerror=function(){
+				console.error("an error has occurred: ");
+			}
+        }
 
 
 
