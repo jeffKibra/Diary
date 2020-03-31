@@ -3,7 +3,7 @@ importScripts('./scripts/indexedDB.js');
 
 goog.offlineGoogleAnalytics.initialize();
 
-var cacheName = "finiteCreations-v1.06";
+var cacheName = "finiteCreations-v1.07";
 
 self.addEventListener("install", event=>{
     self.skipWaiting();
@@ -17,7 +17,7 @@ self.addEventListener("activate", function (event) {
     self.clients.claim();
 });
 
-self.addEventListener('push', function (event) {
+/*self.addEventListener('push', function (event) {
     var payload = event.data ? JSON.parse(event.data.text()) : 'no payload';
     var title = 'Finitecreations diary';
     event.waitUntil(
@@ -31,7 +31,7 @@ self.addEventListener('push', function (event) {
             vibrate: [300, 100, 400]
         })
     );
-});
+});*/
 
 self.addEventListener('notificationclick', function (event) {
     event.notification.close();
@@ -97,7 +97,7 @@ self.addEventListener('sync', (event) => {
 
         function syncReader(mystore, event){//recieves name of the store
 			var db=null,
-			request=window.indexedDB.open("fcrDiary", 2);
+			request=window.indexedDB.open("fcrDiary", 3);
 			request.onsuccess=function(event){
 				db=event.target.result;
 
@@ -136,7 +136,7 @@ function synchronized(myarray, event){
         if (event.tag === arrayvalue.timed) {
             event.waitUntil(
                 console.log(arrayvalue);
-                fetch("http://localhost/public/api.php", {
+                fetch("https://finitecreations.co.ke/api/", {
                     method: 'POST',
                     headers: new Headers({'content-type': "application/json"}),
                     body: JSON.stringify(arrayValue)

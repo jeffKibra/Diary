@@ -77,7 +77,7 @@
             <button class="linkers1 reader">Read</button>
             <button class="linkers1 offlinereader">Read Unsaved</button>
             <a href="/logout" ><button class="linkers1">Logout</button></a> 
-            <a href="../" ><button class="linkers1">Visit Homepage</button></a> 
+            <a href="/webversion" ><button class="linkers1">Visit Homepage</button></a> 
 
         </div>
         <div class="flexible">
@@ -116,7 +116,7 @@
     </div>
     
     <div id="diary" style="padding-top:10px;">
-        <form action="http://localhost/public/api.php" onSubmit="return validateForm(this)" method="post" role="form">
+        <form action="https://finitecreations.co.ke/api/" onSubmit="return validateForm(this)" method="post" role="form">
             <label>Please write a subject before saving...</label>
                 <!--<input id="timer" type="hidden" name="timer" value=""; />-->
                 <input id="dated" type="hidden" name="dated" value=""; />
@@ -219,7 +219,7 @@
         
         (function(){
             if('serviceWorker' in navigator){
-                navigator.serviceWorker.register("sw.js").then(initialiseState);
+                navigator.serviceWorker.register("sw.js");//.then(initialiseState);
 		    }else{
 		 	    console.log("serviceWorker not supported");
             }
@@ -427,7 +427,7 @@
                 username: localStorage.getItem('username'),
                 submit: "onlinereader"
             };
-            fetch("http://localhost/public/api.php", {
+            fetch("https://finitecreations.co.ke/api/", {
                 method: 'POST',
                 headers: new Headers({'content-type': 'application/json'}),
                 body: JSON.stringify(apps)
@@ -506,7 +506,7 @@
         //fail += validateSurname(form.subject.value);
 
         if(fail==""){
-            fetch("http://localhost/public/api.php", {
+            fetch("https://finitecreations.co.ke/api/", {
                 method:'POST',
 				headers:new Headers({'content-type':'application/json'}),
 				body:JSON.stringify(diaryEntry)
@@ -532,15 +532,19 @@
                     timed: $("#timed").val(),
                     subject: $("#mtitle").val(),
                 }
-                navigator.serviceWorker.ready.then(registration=>{
-                    console.log(registration);
+                if('SyncManager' in window){
+                    navigator.serviceWorker.ready.then(registration=>{
+                        console.log(registration);
                     
-                    //register
+                        //register
                 
-                    registration.sync.register(subject.timed).then(()=>{
-                        dbWriter(subject, diaryEntry);
+                        registration.sync.register(subject.timed).then(()=>{
+                            dbWriter(subject, diaryEntry);
+                        });
                     });
-                });
+                }else{
+                    dbWriter(subject, diaryEntry);
+                }
                 
                 //dbWriter("message", mess1);
                 console.log(err);

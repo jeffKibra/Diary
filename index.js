@@ -6,7 +6,7 @@ const express = require("express");
 const {validateSignup, validateLogin, validateEntry}=require("./mymodules/validator");
 
 const app=express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5050;
 
 //generate only once
 //const vapidKeys=webpush.generateVAPIDKeys();

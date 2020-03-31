@@ -1,6 +1,6 @@
         function allReader(mystore){//recieves name of the store
 			var db=null,
-			request=window.indexedDB.open("fcrDiary", 2);
+			request=window.indexedDB.open("fcrDiary", 3);
 			request.onsuccess=function(event){
 				db=event.target.result;
 
@@ -40,7 +40,7 @@
 
         function onlineSaver(){
             var db=null,
-                request=window.indexedDB.open("fcrDiary", 2);
+                request=window.indexedDB.open("fcrDiary", 3);
             request.onsuccess=function(event){
                 db=event.target.result;
                 //select a store in a transaction
@@ -65,7 +65,7 @@
                         console.log(customers);
                         customers.forEach(arrayValue=>{
                             console.log(arrayValue);
-                            fetch("http://localhost/public/api.php", {
+                            fetch("https://finitecreations.co.ke/api/", {
                                 method: 'POST',
                                 headers: new Headers({'content-type': "application/json"}),
                                 body: JSON.stringify(arrayValue)
@@ -102,7 +102,7 @@
     
         function deleteValues(value) {//takes in values of index to be searched
             var db=null,
-			request=window.indexedDB.open("fcrDiary", 2);
+			request=window.indexedDB.open("fcrDiary", 3);
 			request.onsuccess=function(event){
 				db=event.target.result;
 
@@ -192,7 +192,7 @@
 
 		function ondbWriter(subject, entries){
 			var db=null,
-			request=window.indexedDB.open("fcrDiary", 2);
+			request=window.indexedDB.open("fcrDiary", 3);
 
 			request.onsuccess=function(event){
 				//console.log(event);
@@ -244,7 +244,7 @@
 
         function onReader(mystore){//function to read stored data from the server recieves name of the store
 			var db=null,
-			request=window.indexedDB.open("fcrDiary", 2);
+			request=window.indexedDB.open("fcrDiary", 3);
 			request.onsuccess=function(event){
 				db=event.target.result;
 
@@ -309,7 +309,7 @@
 
         function ondbClear(substore, entstore){//function clear data in stores to avoid duplication
 			var db=null,
-			request=window.indexedDB.open("fcrDiary", 2);
+			request=window.indexedDB.open("fcrDiary", 3);
 
 			request.onsuccess=function(event){
 				//console.log(event);
@@ -353,7 +353,7 @@
         
         function dbWriter(subject, entries){//function to write data not saved online
 			var db=null,
-			request=window.indexedDB.open("fcrDiary", 2);
+			request=window.indexedDB.open("fcrDiary", 3);
 
 			request.onsuccess=function(event){
 				//console.log(event);
@@ -405,7 +405,7 @@
 
         function permanentWriter(details){//function to store the users details locally
 			var db=null,
-			request=window.indexedDB.open("fcrDiary", 2);
+			request=window.indexedDB.open("fcrDiary", 3);
 
 			request.onsuccess=function(event){
 				//console.log(event);
@@ -485,7 +485,7 @@
 
 function sessionWriter(details){
 			var db=null,
-			request=window.indexedDB.open("fcrDiary", 2);
+			request=window.indexedDB.open("fcrDiary", 3);
 
 			request.onsuccess=function(event){
 				//console.log(event);
@@ -526,7 +526,7 @@ function sessionWriter(details){
 
 function sessionReader(details, storeToUse){
 	var db=null,
-    request=window.indexedDB.open("fcrDiary", 2);
+    request=window.indexedDB.open("fcrDiary", 3);
     request.onsuccess=function(event){
         //console.log(event);
 	   db=event.target.result;
@@ -577,7 +577,7 @@ function sessionReader(details, storeToUse){
 
 function searchItems(mystore, value){//reads value at a time
 	var db=null,
-    request=window.indexedDB.open("fcrDiary", 2);
+    request=window.indexedDB.open("fcrDiary", 3);
     request.onsuccess=function(event){
         //console.log(event);
 	   db=event.target.result;
