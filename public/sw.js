@@ -3,7 +3,7 @@ importScripts('./package/build/importScripts/sw-offline-google-analytics.prod.v0
 
 goog.offlineGoogleAnalytics.initialize();
 
-var cacheName = "finiteCreations-v1.07";
+var cacheName = "finiteCreations-v1.08";
 
 self.addEventListener("install", event=>{
     self.skipWaiting();
