@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
@@ -103,6 +104,8 @@
         </div>
         
     </div>
+
+    <a href="/diary" id="diaryR"></a>
 	
 	<div id="footer" style="position:fixed; bottom:0;">
         <small>
@@ -121,7 +124,9 @@
             var id=localStorage.getItem('permanentId');
             var username=localStorage.getItem('permanentUsername');
             if(id === null && username === null){
-                window.location.href="/onlinelogin";
+                $("#diaryR").trigger('click');
+                console.log("route clicked");
+                //window.location.href="/onlinelogin";
             }
             
             setInterval(loader, 2000);

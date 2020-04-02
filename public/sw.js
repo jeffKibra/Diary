@@ -8,7 +8,26 @@ var cacheName = "finiteCreations-v1.07";
 self.addEventListener("install", event=>{
     self.skipWaiting();
     event.waitUntil(caches.open(cacheName).then(function(cache){
-        cache.addAll([]);
+        cache.addAll([
+            './css/actions.css',
+            './css/footer.css',
+            './css/main.css',
+            './css/widgEditor.css',
+            './css/widgContent.css',
+            './boot/bootstrap.min.css',
+            './boot/bootstrap-reboot.min.css',
+            './boot/bootstrap-grid.min.css',
+            './scripts/indexedDB.js',
+            './scripts/jquery.min.js',
+            './scripts/sha1encryption.js',
+            './scripts/validator.js',
+            './scripts/webpush.js',
+            './scripts/widgEditor.js',
+            'diary.html',
+            'login.html',
+            'manifest.json',
+            'logout.html'
+        ]);
         console.log("cache populated succesfully");
     }))
 })
@@ -54,7 +73,7 @@ self.addEventListener('notificationclick', function (event) {
 
 
 self.addEventListener('fetch', event=>{
-//    console.log(event);
+    console.log(event.request.url);
     if(event.request.method==='POST'){
             return fetch(event.request).then(function(response){
                 return response;
@@ -63,8 +82,66 @@ self.addEventListener('fetch', event=>{
                 console.log(error);
             });
         }
+    if(event.request.method === 'GET'){
+        var requestToCache=event.request.clone();
+        if(/logout/.test(event.request.url)){
+                console.log("a logout request");
+            }
+            if(/login/.test(event.request.url)){
+                console.log("a login request");
+            }
+        if(/diary/.test(event.request.url)){
+                console.log("a diary request");
+            }
 
-    event.respondWith(caches.match(event.request, {ignoreSearch:true}).then(function(response){
+            event.respondWith(
+            	fetch(event.request).then(res=>{
+            		console.log(res);
+           			if(!res || res.status !== 200){
+        		        throw "invalid response";
+        			}
+            		var responseToCache=res.clone();
+            
+            		caches.open(cacheName).then(cache=>{
+                		cache.put(requestToCache, responseToCache);
+            		});
+            
+            		return res;
+            
+       			}).catch(err=>{
+            		if(/logout/.test(event.request.url)){
+            		    return caches.match('logout.html').then(response=>{
+            		    	console.log(response);
+            		    	if(response) return response;
+            		    });
+            		    
+            		}else if(/login/.test(event.request.url)){
+            			return caches.match('login.html').then(response=>{
+            		    	console.log(response);
+            		    	if(response) return response;
+            		    });
+            		}else if(/diary/.test(event.request.url)){
+            			return caches.match('diary.html').then(response=>{
+            		    	console.log(response);
+            		    	if(response) return response;
+            		    });
+
+            		}else {
+            			return caches.match(event.request.url).then(response=>{
+            		    	console.log(response);
+            		    	if(response) return response;
+            		    	console.log("no cached files");
+            		    	return;
+            			});	
+            		}
+            		
+            		
+           			console.log(err); 
+        		}));
+        
+    }
+
+    /*event.respondWith(caches.match(event.request, {ignoreSearch:true}).then(function(response){
         if(response) return response;
         var requestToCache=event.request.clone();
 
@@ -85,7 +162,7 @@ self.addEventListener('fetch', event=>{
                 return caches.match(offlinePage);
             }
         });
-    }));
+    }));*/
 });
 
 
