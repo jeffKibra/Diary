@@ -26,7 +26,8 @@ self.addEventListener("install", event=>{
             'diary.html',
             'login.html',
             'manifest.json',
-            'logout.html'
+            'logout.html',
+            'offline.html'
         ]);
         console.log("cache populated succesfully");
     }))
@@ -131,7 +132,9 @@ self.addEventListener('fetch', event=>{
                             
             		    	if(response) return response;
             		    	console.log("no cached files");
-            		    	return;
+            		    	return caches.match('offline.html').then(res=>{
+                                return res;
+                            });
                     });	
             		
            			console.log(err); 
