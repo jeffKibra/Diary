@@ -3,7 +3,7 @@ importScripts('./package/build/importScripts/sw-offline-google-analytics.prod.v0
 
 goog.offlineGoogleAnalytics.initialize();
 
-var cacheName = "finiteCreations-v1.08";
+var cacheName = "finiteCreations-v1.09";
 
 self.addEventListener("install", event=>{
     self.skipWaiting();
@@ -73,7 +73,7 @@ self.addEventListener('notificationclick', function (event) {
 
 
 self.addEventListener('fetch', event=>{
-    console.log(event.request.url);
+    console.log(event.request);
     if(event.request.method==='POST'){
             return fetch(event.request).then(function(response){
                 return response;
@@ -82,19 +82,11 @@ self.addEventListener('fetch', event=>{
                 console.log(error);
             });
         }
+    
     if(event.request.method === 'GET'){
         var requestToCache=event.request.clone();
-        if(/logout/.test(event.request.url)){
-                console.log("a logout request");
-            }
-            if(/login/.test(event.request.url)){
-                console.log("a login request");
-            }
-        if(/diary/.test(event.request.url)){
-                console.log("a diary request");
-            }
 
-            event.respondWith(
+            /*event.respondWith(
             	fetch(event.request).then(res=>{
             		console.log(res);
            			if(!res || res.status !== 200){
@@ -127,11 +119,9 @@ self.addEventListener('fetch', event=>{
             		    });
 
             		}else {
-            			return caches.match(event.request.url).then(response=>{
+            			return caches.match(event.request).then(response=>{
             		    	console.log(response);
-                            if(/\.js$/.test(event.request.url)){
-                                response.headers.set('content-type', 'application/javascript');
-                            }
+                            
             		    	if(response) return response;
             		    	console.log("no cached files");
             		    	return;
@@ -140,11 +130,9 @@ self.addEventListener('fetch', event=>{
             		
             		
            			console.log(err); 
-        		}));
+        		}));*/
         
-    }
-
-    /*event.respondWith(caches.match(event.request, {ignoreSearch:true}).then(function(response){
+        event.respondWith(caches.match(event.request, {ignoreSearch:true}).then(function(response){
         if(response) return response;
         var requestToCache=event.request.clone();
 
@@ -165,7 +153,11 @@ self.addEventListener('fetch', event=>{
                 return caches.match(offlinePage);
             }
         });
-    }));*/
+    }));
+        
+    }
+
+    
 });
 
 
