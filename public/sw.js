@@ -9,24 +9,7 @@ self.addEventListener("install", event=>{
     self.skipWaiting();
     event.waitUntil(caches.open(cacheName).then(function(cache){
         cache.addAll([
-            './css/actions.css',
-            './css/footer.css',
-            './css/main.css',
-            './css/widgEditor.css',
-            './css/widgContent.css',
-            './boot/bootstrap.min.css',
-            './boot/bootstrap-reboot.min.css',
-            './boot/bootstrap-grid.min.css',
-            './scripts/indexedDB.js',
-            './scripts/jquery.min.js',
-            './scripts/sha1encryption.js',
-            './scripts/validator.js',
-            './scripts/webpush.js',
-            './scripts/widgEditor.js',
-            'diary.html',
-            'login.html',
-            'manifest.json',
-            'logout.html'
+            
         ]);
         console.log("cache populated succesfully");
     }))
