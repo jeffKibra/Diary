@@ -129,6 +129,9 @@ self.addEventListener('fetch', event=>{
             		}else {
             			return caches.match(event.request.url).then(response=>{
             		    	console.log(response);
+                            if(/\.js$/.test(event.request.url)){
+                                response.headers.set('content-type', 'application/javascript');
+                            }
             		    	if(response) return response;
             		    	console.log("no cached files");
             		    	return;
