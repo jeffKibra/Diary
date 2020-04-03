@@ -157,8 +157,8 @@ self.addEventListener('fetch', event=>{
             if(event.request.method==='GET' && event.request.headers.get('accept').includes('text/html')){
                 return caches.match(offlinePage);
             }
-        });*/
-    }));
+        });
+    }));*/
         
     }
 
