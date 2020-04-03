@@ -85,8 +85,7 @@ self.addEventListener('fetch', event=>{
     
     if(event.request.method === 'GET'){
         var requestToCache=event.request.clone();
-
-            /*event.respondWith(
+            event.respondWith(
             	fetch(event.request).then(res=>{
             		console.log(res);
            			if(!res || res.status !== 200){
@@ -101,7 +100,7 @@ self.addEventListener('fetch', event=>{
             		return res;
             
        			}).catch(err=>{
-            		if(/logout/.test(event.request.url)){
+            		/*if(/logout/.test(event.request.url)){
             		    return caches.match('logout.html').then(response=>{
             		    	console.log(response);
             		    	if(response) return response;
@@ -126,13 +125,19 @@ self.addEventListener('fetch', event=>{
             		    	console.log("no cached files");
             		    	return;
             			});	
-            		}
-            		
+            		}*/
+            		return caches.match(event.request, {ignoreSearch:true}).then(response=>{
+            		    	console.log(response);
+                            
+            		    	if(response) return response;
+            		    	console.log("no cached files");
+            		    	return;
+                    });	
             		
            			console.log(err); 
-        		}));*/
+        		}));
         
-        event.respondWith(caches.match(event.request, {ignoreSearch:true}).then(function(response){
+        /*event.respondWith(caches.match(event.request, {ignoreSearch:true}).then(function(response){
         if(response) return response;
         var requestToCache=event.request.clone();
 
@@ -152,7 +157,7 @@ self.addEventListener('fetch', event=>{
             if(event.request.method==='GET' && event.request.headers.get('accept').includes('text/html')){
                 return caches.match(offlinePage);
             }
-        });
+        });*/
     }));
         
     }
