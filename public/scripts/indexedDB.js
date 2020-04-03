@@ -551,7 +551,7 @@ function sessionReader(details, storeToUse){
                document.getElementById("loginmessage").innerHTML="invalid username or password";
            }else if(userdetails.username !== "" && userdetails.id !== "" && userdetails.password !== ""){
                if(details.username === userdetails.username && details.password === userdetails.password){
-                    document.getElementById("loginmessage").innerHTML="login successful. redirecting...";
+                    document.getElementById("loginmessage").innerHTML="login successful. <a href='/diary' class='btn btn-warning'>continue </a>";
                     //document.getElementById("identified").innerHTML= userdetails.id;
                     //document.getElementById("username1").innerHTML= userdetails.username;
                     localStorage.setItem('id', userdetails.id);
