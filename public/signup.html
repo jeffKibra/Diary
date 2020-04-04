@@ -151,12 +151,11 @@
                     usernameC: 'CONFIRM USERNAME'
                 }
                 
-                fetch("https://finitecreations.co.ke/api/", {
+                fetch("http://localhost/public/api/", {
                     method: 'POST',
                     headers: new Headers({'content-type': "application/json"}),
                     body: JSON.stringify(data)
                 }).then(res=>{
-                    console.log(res);
                     return res.json();
                 }).then(res=>{
                     console.log(res);
@@ -166,6 +165,7 @@
                         }
                         $("#userup").addClass("useryes");
                         data="username available";
+                        $("#badresponse").html("");
                     } 
                     if(res.value=="success"){
                         if($("#userup").hasClass("useryes")){
@@ -176,7 +176,6 @@
                     }
                     
                     $("#userup").html(data);
-                    console.log(res);
                 }).catch(err=>{
                     console.log(err);
                 });            
@@ -204,12 +203,11 @@
 
             if(fail==""){
                 console.log("fetching");
-                fetch('https:finitecreations.co.ke/api/', {
+                fetch('http://localhost/public/api/', {
                     method: 'POST',
                     headers: new Headers({'content-type': "application/json"}),
                     body: JSON.stringify(signupdata)
                 }).then(res=>{
-                    console.log(res);
                     return res.json();
                 }).then(res=>{
                     console.log(res);
@@ -219,9 +217,8 @@
                         //$("#onlinelogin").trigger('click');
                         window.location.href="/login";
                     }else{
-                        $("#badresponse").html(res.value);
+                        $("#badresponse").html("username taken");
                         $("#response").html("");
-                        
                     }
                     
                 }).catch(err=>{
