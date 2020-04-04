@@ -134,7 +134,7 @@
 	<div id="footer" style="position:fixed; bottom:0;">
         <small>
             copyright &copy; 2020 | 
-            <a href="http://finitecreations.co.ke"> powered by finite creations</a>
+            <a href="https://finitecreations.co.ke"> powered by finite creations</a>
         </small>
     </div>
 
@@ -151,7 +151,7 @@
                     usernameC: 'CONFIRM USERNAME'
                 }
                 
-                fetch("http://localhost/public/api/", {
+                fetch("https://finitecreations.co.ke/api/", {
                     method: 'POST',
                     headers: new Headers({'content-type': "application/json"}),
                     body: JSON.stringify(data)
@@ -203,7 +203,7 @@
 
             if(fail==""){
                 console.log("fetching");
-                fetch('http://localhost/public/api/', {
+                fetch('https://finitecreations.co.ke/api/', {
                     method: 'POST',
                     headers: new Headers({'content-type': "application/json"}),
                     body: JSON.stringify(signupdata)
