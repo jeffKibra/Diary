@@ -291,8 +291,8 @@
             var permid=localStorage.getItem('permanentId');
             if(id!==null && username !== null && id === permid && username === permuser){
                 $("#identified").html("Welcome back "+username);
-                console.log(id);
-                console.log(username);
+                //console.log(id);
+                //console.log(username);
             }
             else{
                  $("#identified").html("You must be loged in to access this page. Redirecting...");
@@ -388,16 +388,16 @@
 
         function offreader(event){
             var readid=event.target.id
-            console.log(readid);
-            console.log(event);
+            //console.log(readid);
+            //console.log(event);
             $(".writearea").removeClass("hidden");
             searchItems("entries", readid);
         }
         
         function serverreader(event){
             var readid=event.target.id
-            console.log(readid);
-            console.log(event);
+            //console.log(readid);
+            //console.log(event);
             $(".writearea").removeClass("hidden");
             searchItems("onlineEntries", readid);
         }
@@ -449,7 +449,7 @@
                     //console.log(value);
                     ondbWriter(onlineSub, value);
                 });
-                console.log(res);
+                //console.log(res);
                 onReader("onlineSubject");
                 
             }).catch(err=>{
@@ -519,7 +519,7 @@
                 //displayMessage("message sent...");
                 return response.text();
             }).then(response=>{
-                console.log(response)
+                //console.log(response)
                if(response.value=="yes"){
                    $("#displayMessage").val("entries saved successfully");
                }else{
