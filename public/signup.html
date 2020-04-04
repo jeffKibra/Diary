@@ -109,7 +109,7 @@
                 
                         <br />
                         
-                        <p class="card-text">Have an account? <a href="/onlinelogin">Log in...</a></p>
+                        <p class="card-text">Have an account? <a href="/login">Log in...</a></p>
                     </div>
 
                 </div>
@@ -145,13 +145,13 @@
     <script type="text/javascript">
         $(document).ready(function(){
             //https://finitecreations.co.ke/api/
-            /*$("#username").blur(function(){
+            $("#username").blur(function(){
                 var data={
                     username: $(this).val(),
                     usernameC: 'CONFIRM USERNAME'
                 }
                 
-                fetch("http://localhost/public/api/", {
+                fetch("https://finitecreations.co.ke/api/", {
                     method: 'POST',
                     headers: new Headers({'content-type': "application/json"}),
                     body: JSON.stringify(data)
@@ -160,14 +160,14 @@
                     return res.json();
                 }).then(res=>{
                     console.log(res);
-                    if(res.value=="no"){
+                    if(res.value=="error"){
                         if($("#userup").hasClass("userno")){
                             $("#userup").removeClass("userno");
                         }
                         $("#userup").addClass("useryes");
                         data="username available";
                     } 
-                    if(res.value=="yes"){
+                    if(res.value=="success"){
                         if($("#userup").hasClass("useryes")){
                             $("#userup").removeClass("useryes");
                         }
@@ -180,7 +180,7 @@
                 }).catch(err=>{
                     console.log(err);
                 });            
-            });*/
+            });
         });
 
         function signedup(form){
@@ -210,14 +210,14 @@
                     body: JSON.stringify(signupdata)
                 }).then(res=>{
                     console.log(res);
-                    return res.text();
+                    return res.json();
                 }).then(res=>{
                     console.log(res);
                     if(res.value==="success"){
                         $("#response").html("SUCESS! Redirecting...");
                         $("#badresponse").html("");
-                        $("#onlinelogin").trigger('click');
-                        window.location.href="/onlinelogin";
+                        //$("#onlinelogin").trigger('click');
+                        window.location.href="/login";
                     }else{
                         $("#badresponse").html(res.value);
                         $("#response").html("");

@@ -74,21 +74,23 @@ self.addEventListener('notificationclick', function (event) {
 
 
 self.addEventListener('fetch', event=>{
-    console.log(event.request);
+    //console.log(event.request);
     if(event.request.method==='POST'){
-            return fetch(event.request).then(function(response){
+        event.respondWith(
+            fetch(event.request).then(response=>{
+                //console.log(response);
                 return response;
             }).catch(error=>{
                 console.log("you are currently offline");
                 console.log(error);
-            });
-        }
+            }));
+    }
     
     if(event.request.method === 'GET'){
         var requestToCache=event.request.clone();
             event.respondWith(
             	fetch(event.request).then(res=>{
-            		console.log(res);
+            		//console.log(res);
            			if(!res || res.status !== 200){
         		        throw "invalid response";
         			}
@@ -128,7 +130,7 @@ self.addEventListener('fetch', event=>{
             			});	
             		}*/
             		return caches.match(event.request, {ignoreSearch:true}).then(response=>{
-            		    	console.log(response);
+            		    	//console.log(response);
                             
             		    	if(response) return response;
             		    	console.log("no cached files");
@@ -203,7 +205,7 @@ self.addEventListener('sync', (syncEvent) => {
 						cursor.continue();
 					}
 					else{
-						console.log(customers);
+						//console.log(customers);
                         synchronized(customers, syncEvent);           
 					}
 				}

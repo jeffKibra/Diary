@@ -25,7 +25,7 @@
 					}
 					else{
 						createTable(customers, "tableBodyOff");
-						console.log(customers);
+						//console.log(customers);
 					}
 					
 				}
@@ -62,9 +62,9 @@
 						customers.push(cursor.value);
 						cursor.continue();
 					}else{
-                        console.log(customers);
+                        //console.log(customers);
                         customers.forEach(arrayValue=>{
-                            console.log(arrayValue);
+                            //console.log(arrayValue);
                             fetch("https://finitecreations.co.ke/api/", {
                                 method: 'POST',
                                 headers: new Headers({'content-type': "application/json"}),
@@ -76,9 +76,9 @@
                                 return res.json();
                             }).then(response=>{
                                 //console.log(response.value);
-                                console.log(response);
-                                if(response.value=="yes"){
-                                   console.log(response.value); document.getElementById("displayMessage").innerHTML="entries successfully saved in the server";
+                                //console.log(response);
+                                if(response.value=="sucess"){
+                                   //console.log(response.value); document.getElementById("displayMessage").innerHTML="entries successfully saved in the server";
                                     deleteValues(arrayValue.timed);
                                 }else{
                                     document.getElementById("displayError").innerHTML="Entries not saved. please try again later";
@@ -269,7 +269,7 @@
 					}
 					else{
 						createTableOn(customers, "tableBodyOn");
-						console.log(customers);
+						//console.log(customers);
 					}
 				}
 			}
@@ -280,7 +280,7 @@
 		}
 
         function createTableOn(data, id){
-			console.log(data);
+			//console.log(data);
             document.getElementById(id).innerHTML="";
 			//document.getElementById("tableBody").innerHTML=data[0].title;
 			for(var i=0;i<data.length; i++){
@@ -300,7 +300,7 @@
 				btn.innerHTML="read";
 				bdata.appendChild(btn);
 				nodeToAdd.appendChild(bdata);
-				console.log(objectval);
+				//console.log(objectval);
 				document.getElementById(id).appendChild(nodeToAdd);
 				btn.onclick=serverreader;
 			}
@@ -425,14 +425,11 @@
 		
 				var usedRequest=usedStore.add(details);
 				usedRequest.onsuccess=function(event){
-                    var msg="You can now login when offline";
-                    document.getElementById("loginmessage").innerHTML=msg;
                     localStorage.setItem('permanentUsername', details.username);
                     localStorage.setItem('permanentId', details.id);
-					console.log();
 				}
                 usedRequest.onerror=function(e){
-                    var errorMsg="details not saved locally"+ e.target.error.name;
+                    var errorMsg="an error occurred"+ e.target.error.name;
                     document.getElementById("loginmessage").innerHTML=errorMsg;
                     console.log(errorMsg);
                 }
@@ -613,7 +610,7 @@ function searchItems(mystore, value){//reads value at a time
                     ccontent="<h4>"+value.subject+"</h4><br/><small>"+value.dated+ ":" + value.timed+"</small><br/>"+value.mywrite+"<br />";
                     document.getElementById("writtenC").innerHTML+=ccontent; 
                 });
-		      console.log(customers);
+		      //console.log(customers);
                 
             }
         }
